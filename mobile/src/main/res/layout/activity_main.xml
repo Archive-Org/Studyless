@@ -33,13 +33,12 @@
                     android:text="1"
                     android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-                <Button
+                <RadioButton
                     android:id="@+id/B1d"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:allowUndo="true"
                     android:checked="false"
                     android:clickable="true"
                     android:enabled="true"
@@ -49,13 +48,12 @@
                     android:textAlignment="center"
                     android:textStyle="bold"/>
 
-                <Button
+                <RadioButton
                     android:id="@+id/B1c"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/B1d"
-                    android:allowUndo="true"
                     android:checked="false"
                     android:clickable="true"
                     android:enabled="true"
@@ -65,13 +63,12 @@
                     android:textAlignment="center"
                     android:textStyle="bold"/>
 
-                <Button
+                <RadioButton
                     android:id="@+id/B1b"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/B1c"
-                    android:allowUndo="true"
                     android:checked="false"
                     android:clickable="true"
                     android:enabled="true"
@@ -81,13 +78,12 @@
                     android:textAlignment="center"
                     android:textStyle="bold"/>
 
-                <Button
+                <RadioButton
                     android:id="@+id/B1a"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/B1b"
-                    android:allowUndo="true"
                     android:checked="false"
                     android:clickable="true"
                     android:enabled="true"
@@ -95,8 +91,7 @@
                     android:singleLine="true"
                     android:text="A"
                     android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:translationZ="5dp"/>
+                    android:textStyle="bold"/>
 
             </RelativeLayout>
         </TableRow>
