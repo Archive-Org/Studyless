@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "843563988791",
+    "firebase_url": "https://project-9159409149709947110.firebaseio.com",
+    "project_id": "project-9159409149709947110",
+    "storage_bucket": "project-9159409149709947110.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843563988791:android:fcf84976c167213e",
+        "android_client_info": {
+          "package_name": "com.company.studyless"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "843563988791-a858mti2es7egcbcb7v6u74817u5vb2v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMbZH25SvSvkm7GJAOETbPxtBPbgarToI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
