@@ -14,7 +14,11 @@ public class matrix {
         return Data[row];
     }
 
-    public void setData(int add, int row, int colum) {
-        this.Data[row][colum] += add;
+    public void addOne(int row, int colum) {
+        this.Data[row][colum] += 1;
+    }
+
+    public void restOne(int row, int colum) {
+        this.Data[row][colum] -= 1;
     }
 }

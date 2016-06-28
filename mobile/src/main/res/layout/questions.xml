@@ -32,7 +32,7 @@
                 android:id="@+id/rb1a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener1"
+                android:onClick="buttonclicklistener"
                 android:text="A"
                 />
 
@@ -40,7 +40,7 @@
                 android:id="@+id/rb1b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener1"
+                android:onClick="buttonclicklistener"
                 android:text="B"
                 />
 
@@ -48,7 +48,7 @@
                 android:id="@+id/rb1c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener1"
+                android:onClick="buttonclicklistener"
                 android:text="C"
                 />
 
@@ -56,7 +56,7 @@
                 android:id="@+id/rb1d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener1"
+                android:onClick="buttonclicklistener"
                 android:text="D"
                 />
         </RadioGroup>
@@ -99,7 +99,7 @@
                 android:id="@+id/rb2a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener2"
+                android:onClick="buttonclicklistener"
                 android:text="A"
                 />
 
@@ -107,7 +107,7 @@
                 android:id="@+id/rb2b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener2"
+                android:onClick="buttonclicklistener"
                 android:text="B"
                 />
 
@@ -115,7 +115,7 @@
                 android:id="@+id/rb2c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener2"
+                android:onClick="buttonclicklistener"
                 android:text="C"
                 />
 
@@ -123,7 +123,7 @@
                 android:id="@+id/rb2d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener2"
+                android:onClick="buttonclicklistener"
                 android:text="D"
                 />
         </RadioGroup>
@@ -166,7 +166,7 @@
                 android:id="@+id/rb3a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener3"
+                android:onClick="buttonclicklistener"
                 android:text="A"
                 />
 
@@ -174,7 +174,7 @@
                 android:id="@+id/rb3b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener3"
+                android:onClick="buttonclicklistener"
                 android:text="B"
                 />
 
@@ -182,7 +182,7 @@
                 android:id="@+id/rb3c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener3"
+                android:onClick="buttonclicklistener"
                 android:text="C"
                 />
 
@@ -190,7 +190,7 @@
                 android:id="@+id/rb3d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener3"
+                android:onClick="buttonclicklistener"
                 android:text="D"
                 />
         </RadioGroup>
@@ -233,7 +233,7 @@
                 android:id="@+id/rb4a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener4"
+                android:onClick="buttonclicklistener"
                 android:text="A"
                 />
 
@@ -241,7 +241,7 @@
                 android:id="@+id/rb4b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener4"
+                android:onClick="buttonclicklistener"
                 android:text="B"
                 />
 
@@ -249,7 +249,7 @@
                 android:id="@+id/rb4c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener4"
+                android:onClick="buttonclicklistener"
                 android:text="C"
                 />
 
@@ -257,7 +257,7 @@
                 android:id="@+id/rb4d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener4"
+                android:onClick="buttonclicklistener"
                 android:text="D"
                 />
         </RadioGroup>
@@ -300,7 +300,7 @@
                 android:id="@+id/rb5a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener5"
+                android:onClick="buttonclicklistener"
                 android:text="A"
                 />
 
@@ -308,7 +308,7 @@
                 android:id="@+id/rb5b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener5"
+                android:onClick="buttonclicklistener"
                 android:text="B"
                 />
 
@@ -316,7 +316,7 @@
                 android:id="@+id/rb5c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener5"
+                android:onClick="buttonclicklistener"
                 android:text="C"
                 />
 
@@ -324,7 +324,7 @@
                 android:id="@+id/rb5d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener5"
+                android:onClick="buttonclicklistener"
                 android:text="D"
                 />
         </RadioGroup>
