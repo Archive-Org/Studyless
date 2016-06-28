@@ -32,7 +32,7 @@
                 android:id="@+id/rb1a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="0,0"
                 android:text="A"
                 />
@@ -41,7 +41,7 @@
                 android:id="@+id/rb1b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="0,1"
                 android:text="B"
                 />
@@ -50,7 +50,7 @@
                 android:id="@+id/rb1c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="0,2"
                 android:text="C"
                 />
@@ -59,7 +59,7 @@
                 android:id="@+id/rb1d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="0,3"
                 android:text="D"
                 />
@@ -103,7 +103,7 @@
                 android:id="@+id/rb2a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="1,0"
                 android:text="A"
                 />
@@ -112,7 +112,7 @@
                 android:id="@+id/rb2b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="1,1"
                 android:text="B"
                 />
@@ -121,7 +121,7 @@
                 android:id="@+id/rb2c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="1,2"
                 android:text="C"
                 />
@@ -130,7 +130,7 @@
                 android:id="@+id/rb2d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="1,3"
                 android:text="D"
                 />
@@ -174,7 +174,7 @@
                 android:id="@+id/rb3a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="2,0"
                 android:text="A"
                 />
@@ -183,7 +183,7 @@
                 android:id="@+id/rb3b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="2,1"
                 android:text="B"
                 />
@@ -192,7 +192,7 @@
                 android:id="@+id/rb3c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="2,2"
                 android:text="C"
                 />
@@ -201,7 +201,7 @@
                 android:id="@+id/rb3d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="2,3"
                 android:text="D"
                 />
@@ -245,7 +245,7 @@
                 android:id="@+id/rb4a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="3,0"
                 android:text="A"
                 />
@@ -254,7 +254,7 @@
                 android:id="@+id/rb4b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="3,1"
                 android:text="B"
                 />
@@ -263,7 +263,7 @@
                 android:id="@+id/rb4c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="3,2"
                 android:text="C"
                 />
@@ -272,7 +272,7 @@
                 android:id="@+id/rb4d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="3,3"
                 android:text="D"
                 />
@@ -316,7 +316,7 @@
                 android:id="@+id/rb5a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="4,0"
                 android:text="A"
                 />
@@ -325,7 +325,7 @@
                 android:id="@+id/rb5b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="4,1"
                 android:text="B"
                 />
@@ -334,7 +334,7 @@
                 android:id="@+id/rb5c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="4,2"
                 android:text="C"
                 />
@@ -343,7 +343,7 @@
                 android:id="@+id/rb5d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonclicklistener"
+                android:onClick="buttonClickListener"
                 android:tag="4,3"
                 android:text="D"
                 />
@@ -359,4 +359,12 @@
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/matrixText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 </LinearLayout>
