@@ -51,96 +51,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonclicklistener(View v) throws JSONException {
-        String text = "null";
-        switch (v.getId()) {
-            case R.id.rb1a:
-                matrix.addOne(0, 0);
-                text = "1a";
-                break;
-            case R.id.rb1b:
-                matrix.addOne(0, 1);
-                text = "1b";
-                break;
-            case R.id.rb1c:
-                matrix.addOne(0, 2);
-                text = "1c";
-                break;
-            case R.id.rb1d:
-                matrix.addOne(0, 3);
-                text = "1d";
-                break;
-            case R.id.rb2a:
-                matrix.addOne(1, 0);
-                text = "2a";
-                break;
-            case R.id.rb2b:
-                matrix.addOne(1, 1);
-                text = "2b";
-                break;
-            case R.id.rb2c:
-                matrix.addOne(1, 2);
-                text = "2c";
-                break;
-            case R.id.rb2d:
-                matrix.addOne(1, 3);
-                text = "2d";
-                break;
-            case R.id.rb3a:
-                matrix.addOne(2, 0);
-                text = "3a";
-                break;
-            case R.id.rb3b:
-                matrix.addOne(2, 1);
-                text = "3b";
-                break;
-            case R.id.rb3c:
-                matrix.addOne(2, 2);
-                text = "3c";
-                break;
-            case R.id.rb3d:
-                matrix.addOne(2, 3);
-                text = "3d";
-                break;
-            case R.id.rb4a:
-                matrix.addOne(3, 0);
-                text = "4a";
-                break;
-            case R.id.rb4b:
-                matrix.addOne(3, 1);
-                text = "4b";
-                break;
-            case R.id.rb4c:
-                matrix.addOne(3, 2);
-                text = "4c";
-                break;
-            case R.id.rb4d:
-                matrix.addOne(3, 3);
-                text = "4d";
-                break;
-            case R.id.rb5a:
-                matrix.addOne(4, 0);
-                text = "5a";
-                break;
-            case R.id.rb5b:
-                matrix.addOne(4, 1);
-                text = "5b";
-                break;
-            case R.id.rb5c:
-                matrix.addOne(4, 2);
-                text = "5c";
-                break;
-            case R.id.rb5d:
-                matrix.addOne(4, 3);
-                text = "5d";
-                break;
-            default:
-                break;
-
-        }
+        String tag = (String) v.getTag();
+        String[] parts = tag.split(",");
+        int row = Integer.parseInt(parts[0]);
+        int colum = Integer.parseInt(parts[1]);
+        matrix.addOne(row, colum);
+        String text = row + " " + colum;
         updateRows(4353);
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-
-
 
     }
 
