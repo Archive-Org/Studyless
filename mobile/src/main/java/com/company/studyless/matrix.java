@@ -10,21 +10,39 @@ public class matrix {
     }
 
     public void SyncWDB(Object dbValue) {
-        ArrayList level1 = (ArrayList) dbValue;
-        int e = 0;
-        int i = 0;
-        while (e < 5) {
-            ArrayList esto = (ArrayList) level1.get(e);
-            while (i < 4) {
-                Long esto2 = Long.parseLong(String.valueOf(esto.get(i)));
-                int esto3 = esto2.intValue();
-                Data[e][i] = esto3;
+        try {
+            ArrayList level1 = (ArrayList) dbValue;
+            int e = 0;
+            int i = 0;
+            while (e < 5) {
+                ArrayList esto = (ArrayList) level1.get(e);
+                while (i < 4) {
+                    Long esto2 = Long.parseLong(String.valueOf(esto.get(i)));
+                    int esto3 = esto2.intValue();
+                    Data[e][i] = esto3;
 
-                i++;
+                    i++;
+                }
+                i = 0;
+                e++;
             }
-            i = 0;
-            e++;
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Fallooooooooooooooooooooooooooo");
         }
+    }
+
+    public String MostVoted(int row) {
+        String prefered = "Null";
+        if (Data[row][0] > Data[row][1] && Data[row][0] > Data[row][2] && Data[row][0] > Data[row][3]) {
+            prefered = "A";
+        } else if (Data[row][1] > Data[row][0] && Data[row][1] > Data[row][2] && Data[row][1] > Data[row][3]) {
+            prefered = "B";
+        } else if (Data[row][2] > Data[row][0] && Data[row][2] > Data[row][1] && Data[row][2] > Data[row][3]) {
+            prefered = "C";
+        } else if (Data[row][3] > Data[row][0] && Data[row][3] > Data[row][1] && Data[row][3] > Data[row][2]) {
+            prefered = "D";
+        }
+        return prefered;
 
     }
 
