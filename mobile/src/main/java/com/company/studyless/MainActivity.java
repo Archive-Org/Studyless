@@ -1,11 +1,21 @@
 package com.company.studyless;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     RadioGroup G1, G2, G3, G4, G5;
     TextView result1, result2, result3, result4, result5, matrixText, RoomTextView;
     EditText roomField;
@@ -24,17 +34,31 @@ public class MainActivity extends AppCompatActivity {
     Random random = new Random();
     int room = random.nextInt(1000) + 1;
     int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.questions);
-        bindObjects();
+        setContentView(R.layout.activity_main);
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        bindObjects();
         RoomTextView.setText(String.valueOf(room));
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
         getDatabase();
+
 
     }
 
@@ -101,16 +125,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeRoom(View v) {
         int n = Integer.parseInt(roomField.getText().toString());
-        room = n;
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        G1.clearCheck();
-        G2.clearCheck();
-        G3.clearCheck();
-        G4.clearCheck();
-        G5.clearCheck();
-        RoomTextView.setText(String.valueOf(room));
-        checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
-        getDatabase();
+        if (room == n) {
+            Toast.makeText(getApplicationContext(), "Ya en sala", Toast.LENGTH_SHORT).show();
+        } else {
+            room = n;
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            G1.clearCheck();
+            G2.clearCheck();
+            G3.clearCheck();
+            G4.clearCheck();
+            G5.clearCheck();
+            RoomTextView.setText("Sala: " + String.valueOf(room));
+            checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
+            getDatabase();
+        }
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        roomField.setText("");
+        roomField.setHint("Sala: " + String.valueOf(room));
+
     }
 
     public void bindObjects() {
@@ -144,6 +180,13 @@ public class MainActivity extends AppCompatActivity {
                     result4.setText(matrix.MostVoted(3));
                     result5.setText(matrix.MostVoted(4));
                 } else {
+                    G1.clearCheck();
+                    G2.clearCheck();
+                    G3.clearCheck();
+                    G4.clearCheck();
+                    G5.clearCheck();
+                    RoomTextView.setText("Sala: " + String.valueOf(room));
+                    checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
                     initializeRoom(room);
                 }
             }
@@ -169,6 +212,64 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            setContentView(R.layout.settings);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_questions) {
+            // Handle the camera action
+        } else if (id == R.id.nav_info) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 
 }
 
