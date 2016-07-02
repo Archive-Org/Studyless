@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     matrix matrix = new matrix();
     Random random = new Random();
     int room = random.nextInt(1000) + 1;
-    int[] checkedButtons = {99, 99, 99, 99, 99, 99, 99, 99, 99, 99};
+    int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         RoomTextView.setText(String.valueOf(room));
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        initializeRoom(room);
+
         getDatabase();
 
     }
@@ -70,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        String text = (1 + row) + "-" + (1 + column);
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+        //String text = (1 + row) + "-" + (1 + column);
+        //Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -102,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeRoom(View v) {
         int n = Integer.parseInt(roomField.getText().toString());
-        initializeRoom(n);
         room = n;
         mDatabase = FirebaseDatabase.getInstance().getReference();
         G1.clearCheck();
@@ -111,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         G4.clearCheck();
         G5.clearCheck();
         RoomTextView.setText(String.valueOf(room));
-
+        checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
         getDatabase();
     }
 
@@ -137,13 +135,17 @@ public class MainActivity extends AppCompatActivity {
         mDatabase.child("room_" + room).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                matrix.SyncWDB(dataSnapshot.getValue());
-                matrixText.setText(matrix.matrix2string(matrix.getData(), 5, 4));
-                result1.setText(matrix.MostVoted(0));
-                result2.setText(matrix.MostVoted(1));
-                result3.setText(matrix.MostVoted(2));
-                result4.setText(matrix.MostVoted(3));
-                result5.setText(matrix.MostVoted(4));
+                if (dataSnapshot.exists()) {
+                    matrix.SyncWDB(dataSnapshot.getValue());
+                    matrixText.setText(matrix.matrix2string(matrix.getData(), 5, 4));
+                    result1.setText(matrix.MostVoted(0));
+                    result2.setText(matrix.MostVoted(1));
+                    result3.setText(matrix.MostVoted(2));
+                    result4.setText(matrix.MostVoted(3));
+                    result5.setText(matrix.MostVoted(4));
+                } else {
+                    initializeRoom(room);
+                }
             }
 
             @Override
@@ -157,10 +159,10 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isChecked(int row, int colum) {
         if (checkedButtons[row] == colum) {
-            checkedButtons[row] = 99;
+            checkedButtons[row] = 9999;
             return true;
         } else {
-            if (checkedButtons[row] != 99) {
+            if (checkedButtons[row] != 9999) {
                 lessOneEntry(row, checkedButtons[row]);
             }
             checkedButtons[row] = colum;
