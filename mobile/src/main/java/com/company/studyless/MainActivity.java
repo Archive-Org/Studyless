@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     matrix matrix = new matrix();
     Random random = new Random();
     int room = random.nextInt(1000) + 1;
-    int[] checkedButtons = new int[10];
+    int[] checkedButtons = {99, 99, 99, 99, 99, 99, 99, 99, 99, 99};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,12 +160,14 @@ public class MainActivity extends AppCompatActivity {
             checkedButtons[row] = 99;
             return true;
         } else {
+            if (checkedButtons[row] != 99) {
+                lessOneEntry(row, checkedButtons[row]);
+            }
             checkedButtons[row] = colum;
             return false;
         }
-
-
     }
 
 }
+
 
