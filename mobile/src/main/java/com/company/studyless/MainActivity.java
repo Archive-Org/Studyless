@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     matrix matrix = new matrix();
     Random random = new Random();
     int room = random.nextInt(1000) + 1;
+    int[] checkedButtons = new int[10];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +38,36 @@ public class MainActivity extends AppCompatActivity {
         getDatabase();
 
     }
+
     public void buttonClickListener(View v) {
         String tag = (String) v.getTag();
         String[] parts = tag.split(",");
         int row = Integer.parseInt(parts[0]);
         int column = Integer.parseInt(parts[1]);
-        //matrix.addOne(row, column);
 
+        if (isChecked(row, column)) {
+            switch (row) {
+                case 0:
+                    G1.clearCheck();
+                    break;
+                case 1:
+                    G2.clearCheck();
+                    break;
+                case 2:
+                    G3.clearCheck();
+                    break;
+                case 3:
+                    G4.clearCheck();
+                    break;
+                default:
+                    G5.clearCheck();
+                    break;
 
-        updateEntry(row, column);
+            }
+            lessOneEntry(row, column);
+        } else {
+            plusOneEntry(row, column);
+        }
 
 
         String text = (1 + row) + "-" + (1 + column);
@@ -54,12 +76,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void updateEntry(int row, int column) {
+    public void plusOneEntry(int row, int column) {
         int value = matrix.getData()[row][column] + 1;
         mDatabase.child("room_" + room).child(row + "/" + column + "").setValue(value);
+    }
 
-
-
+    public void lessOneEntry(int row, int column) {
+        int value = matrix.getData()[row][column] - 1;
+        mDatabase.child("room_" + room).child(row + "/" + column + "").setValue(value);
     }
 
     public void initializeRoom(int roomNumber) {
@@ -131,8 +155,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public boolean isChecked(int row, int colum) {
+        if (checkedButtons[row] == colum) {
+            checkedButtons[row] = 99;
+            return true;
+        } else {
+            checkedButtons[row] = colum;
+            return false;
+        }
 
 
-
+    }
 
 }
+
