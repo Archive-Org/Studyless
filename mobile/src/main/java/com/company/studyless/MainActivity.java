@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,14 +28,16 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     RadioGroup G1, G2, G3, G4, G5;
-    TextView result1, result2, result3, result4, result5, matrixText, RoomTextView;
+    TextView result1, result2, result3, result4, result5, matrixText, RoomTextView, volumecount;
     EditText roomField;
     DatabaseReference mDatabase;
     matrix matrix = new matrix();
     Random random = new Random();
+    VolumeHandler volumeHandler = new VolumeHandler();
     int room = random.nextInt(1000) + 1;
     int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
     Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDatabase = FirebaseDatabase.getInstance().getReference();
         getDatabase();
 
+        new VolumeChecherThreath().execute(1,1,1);
 
     }
 
@@ -163,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
         RoomTextView = (TextView) findViewById(R.id.RoomTextViex);
+        volumecount = (TextView) findViewById(R.id.volumecount);
 
     }
 
@@ -186,19 +191,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     G4.clearCheck();
                     G5.clearCheck();
                     RoomTextView.setText("Sala: " + String.valueOf(room));
-                    checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
+                    checkedButtons = new int[]{9999,
+                            9999,
+                            9999,
+                            9999,
+                            9999,
+                            9999,
+                            9999,
+                            9999,
+                            9999,
+                            9999};
                     initializeRoom(room);
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {  }
         });
 
 
     }
+
+
 
     public boolean isChecked(int row, int colum) {
         if (checkedButtons[row] == colum) {
@@ -213,6 +227,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
+    /**
+     * Side bar functions
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -223,14 +241,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_activity, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -246,7 +262,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return super.onOptionsItemSelected(item);
     }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -269,8 +284,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            event.startTracking();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            volumecount.setText(String.valueOf(volumeHandler.handleVolume(1)));
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            volumecount.setText(String.valueOf(volumeHandler.handleVolume(4)));
+            return true;
+        }
+        return super.onKeyLongPress(keyCode, event);
+    }
 
 }
-
-

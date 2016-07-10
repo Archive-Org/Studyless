@@ -32,7 +32,7 @@ public class matrix {
     }
 
     public String MostVoted(int row) {
-        String prefered = "Null";
+        String prefered = "Empate";
         if (Data[row][0] > Data[row][1] && Data[row][0] > Data[row][2] && Data[row][0] > Data[row][3]) {
             prefered = "A";
         } else if (Data[row][1] > Data[row][0] && Data[row][1] > Data[row][2] && Data[row][1] > Data[row][3]) {
