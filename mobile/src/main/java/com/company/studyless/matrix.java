@@ -3,7 +3,7 @@ package com.company.studyless;
 import java.util.ArrayList;
 
 public class matrix {
-    private int[][] Data = new int[5][4];
+    private int[][] Data = new int[10][4];
 
     public int[][] getData() {
         return Data;
@@ -14,7 +14,7 @@ public class matrix {
             ArrayList level1 = (ArrayList) dbValue;
             int e = 0;
             int i = 0;
-            while (e < 5) {
+            while (e < 10) {
                 ArrayList esto = (ArrayList) level1.get(e);
                 while (i < 4) {
                     Long esto2 = Long.parseLong(String.valueOf(esto.get(i)));

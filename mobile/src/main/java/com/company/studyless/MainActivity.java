@@ -27,8 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    RadioGroup G1, G2, G3, G4, G5;
-    TextView result1, result2, result3, result4, result5, matrixText, RoomTextView, volumecount;
+    RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10;
+    TextView result1, result2, result3, result4, result5, result6, result7, result8, result9, result10, matrixText, RoomTextView, volumecount;
     EditText roomField;
     DatabaseReference mDatabase;
     matrix matrix = new matrix();
@@ -86,8 +86,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case 3:
                     G4.clearCheck();
                     break;
-                default:
+                case 4:
                     G5.clearCheck();
+                    break;
+                case 5:
+                    G6.clearCheck();
+                    break;
+                case 6:
+                    G7.clearCheck();
+                    break;
+                case 7:
+                    G8.clearCheck();
+                    break;
+                case 8:
+                    G9.clearCheck();
+                    break;
+                case 9:
+                    G10.clearCheck();
+                    break;
+                default:
                     break;
 
             }
@@ -116,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void initializeRoom(int roomNumber) {
         int e = 0;
         int i = 0;
-        while (e < 5) {
+        while (e < 10) {
             while (i < 4) {
                 mDatabase.child("room_" + roomNumber + "/" + e + "/" + i + "").setValue(0);
                 i++;
@@ -139,6 +156,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             G3.clearCheck();
             G4.clearCheck();
             G5.clearCheck();
+            G6.clearCheck();
+            G7.clearCheck();
+            G8.clearCheck();
+            G9.clearCheck();
+            G10.clearCheck();
             RoomTextView.setText("Sala: " + String.valueOf(room));
             checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
             getDatabase();
@@ -159,11 +181,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         G3 = (RadioGroup) findViewById(R.id.radioGroup3);
         G4 = (RadioGroup) findViewById(R.id.radioGroup4);
         G5 = (RadioGroup) findViewById(R.id.radioGroup5);
+        G6 = (RadioGroup) findViewById(R.id.radioGroup6);
+        G7 = (RadioGroup) findViewById(R.id.radioGroup7);
+        G8 = (RadioGroup) findViewById(R.id.radioGroup8);
+        G9 = (RadioGroup) findViewById(R.id.radioGroup9);
+        G10 = (RadioGroup) findViewById(R.id.radioGroup10);
         result1 = (TextView) findViewById(R.id.resultado1);
         result2 = (TextView) findViewById(R.id.resultado2);
         result3 = (TextView) findViewById(R.id.resultado3);
         result4 = (TextView) findViewById(R.id.resultado4);
         result5 = (TextView) findViewById(R.id.resultado5);
+        result6 = (TextView) findViewById(R.id.resultado6);
+        result7 = (TextView) findViewById(R.id.resultado7);
+        result8 = (TextView) findViewById(R.id.resultado8);
+        result9 = (TextView) findViewById(R.id.resultado9);
+        result10 = (TextView) findViewById(R.id.resultado10);
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
         RoomTextView = (TextView) findViewById(R.id.RoomTextViex);
@@ -178,18 +210,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     matrix.SyncWDB(dataSnapshot.getValue());
-                    matrixText.setText(matrix.matrix2string(matrix.getData(), 5, 4));
+                    matrixText.setText(matrix.matrix2string(matrix.getData(), 10, 4));
                     result1.setText(matrix.MostVoted(0));
                     result2.setText(matrix.MostVoted(1));
                     result3.setText(matrix.MostVoted(2));
                     result4.setText(matrix.MostVoted(3));
                     result5.setText(matrix.MostVoted(4));
+                    result6.setText(matrix.MostVoted(5));
+                    result7.setText(matrix.MostVoted(6));
+                    result8.setText(matrix.MostVoted(7));
+                    result9.setText(matrix.MostVoted(8));
+                    result10.setText(matrix.MostVoted(9));
                 } else {
                     G1.clearCheck();
                     G2.clearCheck();
                     G3.clearCheck();
                     G4.clearCheck();
                     G5.clearCheck();
+                    G6.clearCheck();
+                    G7.clearCheck();
+                    G8.clearCheck();
+                    G9.clearCheck();
+                    G10.clearCheck();
                     RoomTextView.setText("Sala: " + String.valueOf(room));
                     checkedButtons = new int[]{9999,
                             9999,
