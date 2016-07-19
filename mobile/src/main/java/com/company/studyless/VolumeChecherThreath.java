@@ -3,17 +3,34 @@ package com.company.studyless;
 import android.os.AsyncTask;
 
 
-public class VolumeChecherThreath extends AsyncTask<Integer, Integer, Integer> {
+public class VolumeChecherThreath extends AsyncTask<VolumeHandler, Void, VolumeHandler> {
+    Long thisworker = 0L;
+    boolean crash = false;
 
     @Override
-    protected Integer doInBackground(Integer... params) {
-        int i = 0;
-        while (i < 100) {
-            i++;
-            System.out.println("Async Task running....");
+    protected VolumeHandler doInBackground(final VolumeHandler... params) {
+        try {
+            VolumeHandler vh = params[0];
+            thisworker = System.currentTimeMillis();
+            vh.setLastWorker(thisworker);
+
+            Thread.sleep(vh.delay);
+            if (thisworker != vh.lastWorker) {
+                crash = true;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        //Toast.makeText(this.Activity.this, "Hello", Toast.LENGTH_SHORT).show();
-        return null;
+        return params[0];
     }
+
+    @Override
+    protected void onPostExecute(VolumeHandler vh) {
+        if (vh.lastWorker.equals(thisworker) && !crash) {
+            vh.getVibrator().vibrate(500);
+        }
+    }
+
 }
+
 

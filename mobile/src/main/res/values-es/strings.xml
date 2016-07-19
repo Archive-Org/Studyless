@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="Room_">"Sala: "</string>
+
+    <string name="first_slide_title">Bienvenido a StudyLess</string>
+    <string name="first_slide_description">Ten mas tiempo libre</string>
+
+    <string name="second_slide_title">Segundo Titulo</string>
+    <string name="second_slide_description">Esta es la descripcion</string>
+
+    <string name="third_slide_title">Tercer Titulo</string>
+    <string name="third_slide_description">Esta es la descripcion</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="navigation_drawer_close">Cerrar menu</string>
+    <string name="navigation_drawer_open">Abrir menu</string>
+    <string name="done">Continuar</string>
+    <string name="skip">Saltar</string>
+    <string name="action_show_intro">Mostrar ayuda</string>
+
+</resources>

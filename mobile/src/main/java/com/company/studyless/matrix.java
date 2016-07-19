@@ -3,7 +3,8 @@ package com.company.studyless;
 import java.util.ArrayList;
 
 public class matrix {
-    private int[][] Data = new int[10][4];
+    public int questionsRows = 10;
+    private int[][] Data = new int[questionsRows][4];
 
     public int[][] getData() {
         return Data;
@@ -14,7 +15,7 @@ public class matrix {
             ArrayList level1 = (ArrayList) dbValue;
             int e = 0;
             int i = 0;
-            while (e < 10) {
+            while (e < questionsRows) {
                 ArrayList esto = (ArrayList) level1.get(e);
                 while (i < 4) {
                     Long esto2 = Long.parseLong(String.valueOf(esto.get(i)));
@@ -27,7 +28,7 @@ public class matrix {
                 e++;
             }
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Fallooooooooooooooooooooooooooo");
+            System.out.println("Exeption parsing matrix");
         }
     }
 

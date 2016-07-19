@@ -7,6 +7,8 @@
               android:padding="16dp"
               tools:context="com.company.studyless.MainActivity">
 
+    <!-- Question 1-->
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,9 +78,8 @@
             android:layout_toStartOf="@+id/radioGroup1"
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-
     </RelativeLayout>
-
+    <!-- Question 2-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -147,9 +148,8 @@
             android:layout_toStartOf="@+id/radioGroup2"
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-
     </RelativeLayout>
-
+    <!-- Question 3-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -218,9 +218,8 @@
             android:layout_toStartOf="@+id/radioGroup3"
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-
     </RelativeLayout>
-
+    <!-- Question 4-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -290,7 +289,7 @@
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </RelativeLayout>
-
+    <!-- Question 5-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -359,9 +358,8 @@
             android:layout_toStartOf="@+id/radioGroup5"
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-
     </RelativeLayout>
-
+    <!-- Question 6-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -431,9 +429,8 @@
             android:layout_toStartOf="@+id/radioGroup6"
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-
     </RelativeLayout>
-
+    <!-- Question 7-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -502,9 +499,8 @@
             android:layout_toStartOf="@+id/radioGroup7"
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-
     </RelativeLayout>
-
+    <!-- Question 8-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -573,9 +569,8 @@
             android:layout_toStartOf="@+id/radioGroup8"
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-
     </RelativeLayout>
-
+    <!-- Question 9-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -645,7 +640,7 @@
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </RelativeLayout>
-
+    <!-- Question 10-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -714,7 +709,6 @@
             android:layout_toStartOf="@+id/radioGroup10"
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-
     </RelativeLayout>
 
 
@@ -723,7 +717,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Small Text"
+        android:text="Matrix Loading......"
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
 
@@ -732,7 +726,7 @@
         android:id="@+id/volumecount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Large Text"
+        android:text="Volume count"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 

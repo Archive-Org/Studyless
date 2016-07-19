@@ -54,9 +54,9 @@
             android:hint="Numero de sala"
             android:inputType="number"
             android:lines="1"
-            android:maxLength="14"
+            android:maxLength="9"
             android:maxLines="1"
-            />
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/RoomTextViex"

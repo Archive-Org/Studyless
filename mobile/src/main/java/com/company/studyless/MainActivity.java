@@ -1,7 +1,11 @@
 package com.company.studyless;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,7 +16,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -26,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10;
     TextView result1, result2, result3, result4, result5, result6, result7, result8, result9, result10, matrixText, RoomTextView, volumecount;
@@ -37,36 +42,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     int room = random.nextInt(1000) + 1;
     int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
     Toolbar toolbar;
+    Vibrator vibratorService;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Intro if 1st time app start
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyStarted = prefs.getBoolean("Previously started", false);
+        if (!previouslyStarted) {
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putBoolean("Previously started", Boolean.TRUE);
+            edit.apply();
+            Intent intent = new Intent(this, Intro.class);
+            startActivity(intent);
+        }
+        //Display activity main
         setContentView(R.layout.activity_main);
 
+        //Configure left menu and toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Bind views
         bindObjects();
+
+        //Initialize database and Vibrations
         RoomTextView.setText(String.valueOf(room));
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        getDatabase();
+        vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        volumeHandler.setVibrator(vibratorService);
 
-        new VolumeChecherThreath().execute(1,1,1);
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
+        //Fetch data
+        getDatabase();
 
     }
 
+    //Handle all matrix buttons
     public void buttonClickListener(View v) {
+        //Split buttons tags
         String tag = (String) v.getTag();
         String[] parts = tag.split(",");
         int row = Integer.parseInt(parts[0]);
@@ -112,11 +138,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             plusOneEntry(row, column);
         }
-
-
-        //String text = (1 + row) + "-" + (1 + column);
-        //Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-
     }
 
 
@@ -133,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void initializeRoom(int roomNumber) {
         int e = 0;
         int i = 0;
-        while (e < 10) {
+        while (e < matrix.questionsRows) {
             while (i < 4) {
                 mDatabase.child("room_" + roomNumber + "/" + e + "/" + i + "").setValue(0);
                 i++;
@@ -145,37 +166,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void changeRoom(View v) {
-        int n = Integer.parseInt(roomField.getText().toString());
-        if (room == n) {
-            Toast.makeText(getApplicationContext(), "Ya en sala", Toast.LENGTH_SHORT).show();
-        } else {
-            room = n;
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-            G1.clearCheck();
-            G2.clearCheck();
-            G3.clearCheck();
-            G4.clearCheck();
-            G5.clearCheck();
-            G6.clearCheck();
-            G7.clearCheck();
-            G8.clearCheck();
-            G9.clearCheck();
-            G10.clearCheck();
-            RoomTextView.setText("Sala: " + String.valueOf(room));
-            checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
-            getDatabase();
-        }
-        InputMethodManager inputManager = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (!roomField.getText().toString().isEmpty()) {
+            int n = Integer.parseInt(roomField.getText().toString());
 
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                InputMethodManager.HIDE_NOT_ALWAYS);
+            if (room == n) {
+                Toast.makeText(getApplicationContext(), "Ya en sala", Toast.LENGTH_SHORT).show();
+            } else {
+                room = n;
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                G1.clearCheck();
+                G2.clearCheck();
+                G3.clearCheck();
+                G4.clearCheck();
+                G5.clearCheck();
+                G6.clearCheck();
+                G7.clearCheck();
+                G8.clearCheck();
+                G9.clearCheck();
+                G10.clearCheck();
+                RoomTextView.setText(getString(R.string.Room_) + String.valueOf(room));
+                checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
+                getDatabase();
+            }
+        }
+
         roomField.setText("");
-        roomField.setHint("Sala: " + String.valueOf(room));
+        roomField.setHint(getString(R.string.Room_) + String.valueOf(room));
 
     }
 
     public void bindObjects() {
+        //Better way to this ugly stuff?
         G1 = (RadioGroup) findViewById(R.id.radioGroup1);
         G2 = (RadioGroup) findViewById(R.id.radioGroup2);
         G3 = (RadioGroup) findViewById(R.id.radioGroup3);
@@ -204,13 +225,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void getDatabase() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("room_" + room).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     matrix.SyncWDB(dataSnapshot.getValue());
-                    matrixText.setText(matrix.matrix2string(matrix.getData(), 10, 4));
+
+                    matrixText.setText(matrix.matrix2string(matrix.getData(),
+                            matrix.questionsRows,
+                            4));
+
                     result1.setText(matrix.MostVoted(0));
                     result2.setText(matrix.MostVoted(1));
                     result3.setText(matrix.MostVoted(2));
@@ -254,8 +278,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
-
     public boolean isChecked(int row, int colum) {
         if (checkedButtons[row] == colum) {
             checkedButtons[row] = 9999;
@@ -270,16 +292,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    /**
-     * Side bar functions
-     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+
             super.onBackPressed();
         }
     }
@@ -298,9 +317,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            setContentView(R.layout.settings);
+            Intent intent = new Intent(this, setting.class);
+            startActivity(intent);
             return true;
         }
+        if (id == R.id.action_show_intro) {
+            Intent intent = new Intent(this, Intro.class);
+            startActivity(intent);
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -338,6 +364,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             volumecount.setText(String.valueOf(volumeHandler.handleVolume(1)));
+            new VolumeChecherThreath().execute(volumeHandler);
             return true;
         }
         return super.onKeyUp(keyCode, event);
@@ -346,9 +373,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             volumecount.setText(String.valueOf(volumeHandler.handleVolume(4)));
+            new VolumeChecherThreath().execute(volumeHandler);
+
             return true;
         }
         return super.onKeyLongPress(keyCode, event);
     }
+
 
 }
