@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:padding="16dp"
-              tools:context="com.company.studyless.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="?android:dividerHorizontal"
+    android:showDividers="middle"
+    android:dividerPadding="8dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+
+    tools:context="com.company.studyless.MainActivity">
 
     <!-- Question 1-->
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +24,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="1"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup1"
@@ -38,8 +41,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="0,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb1b"
@@ -47,8 +49,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="0,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb1c"
@@ -56,8 +57,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="0,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb1d"
@@ -65,8 +65,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="0,3"
-                android:text="D"
-                />
+                android:text="D" />
 
         </RadioGroup>
 
@@ -77,7 +76,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup1"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
     <!-- Question 2-->
     <RelativeLayout
@@ -92,7 +91,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="2"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup2"
@@ -109,8 +108,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="1,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb2b"
@@ -118,8 +116,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="1,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb2c"
@@ -127,8 +124,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="1,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb2d"
@@ -136,8 +132,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="1,3"
-                android:text="D"
-                />
+                android:text="D" />
         </RadioGroup>
 
         <TextView
@@ -147,7 +142,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup2"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
     <!-- Question 3-->
     <RelativeLayout
@@ -162,7 +157,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="3"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup3"
@@ -179,8 +174,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="2,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb3b"
@@ -188,8 +182,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="2,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb3c"
@@ -197,8 +190,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="2,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb3d"
@@ -206,8 +198,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="2,3"
-                android:text="D"
-                />
+                android:text="D" />
         </RadioGroup>
 
         <TextView
@@ -217,7 +208,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup3"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
     <!-- Question 4-->
     <RelativeLayout
@@ -232,7 +223,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="4"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup4"
@@ -249,8 +240,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="3,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb4b"
@@ -258,8 +248,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="3,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb4c"
@@ -267,8 +256,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="3,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb4d"
@@ -276,8 +264,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="3,3"
-                android:text="D"
-                />
+                android:text="D" />
         </RadioGroup>
 
         <TextView
@@ -287,7 +274,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup4"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
     <!-- Question 5-->
     <RelativeLayout
@@ -302,7 +289,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="5"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup5"
@@ -319,8 +306,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="4,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb5b"
@@ -328,8 +314,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="4,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb5c"
@@ -337,8 +322,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="4,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb5d"
@@ -346,8 +330,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="4,3"
-                android:text="D"
-                />
+                android:text="D" />
         </RadioGroup>
 
         <TextView
@@ -357,7 +340,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup5"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
     <!-- Question 6-->
     <RelativeLayout
@@ -372,7 +355,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="6"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup6"
@@ -389,8 +372,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="5,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb6b"
@@ -398,8 +380,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="5,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb6c"
@@ -407,8 +388,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="5,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb6d"
@@ -416,8 +396,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="5,3"
-                android:text="D"
-                />
+                android:text="D" />
 
         </RadioGroup>
 
@@ -428,7 +407,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup6"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
     <!-- Question 7-->
     <RelativeLayout
@@ -443,7 +422,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="7"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup7"
@@ -460,8 +439,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="6,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb7b"
@@ -469,8 +447,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="6,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb7c"
@@ -478,8 +455,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="6,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb7d"
@@ -487,8 +463,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="6,3"
-                android:text="D"
-                />
+                android:text="D" />
         </RadioGroup>
 
         <TextView
@@ -498,7 +473,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup7"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
     <!-- Question 8-->
     <RelativeLayout
@@ -513,7 +488,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="8"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup8"
@@ -530,8 +505,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="7,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb8b"
@@ -539,8 +513,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="7,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb8c"
@@ -548,8 +521,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="7,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb8d"
@@ -557,8 +529,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="7,3"
-                android:text="D"
-                />
+                android:text="D" />
         </RadioGroup>
 
         <TextView
@@ -568,7 +539,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup8"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
     <!-- Question 9-->
     <RelativeLayout
@@ -583,7 +554,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="9"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup9"
@@ -600,8 +571,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="8,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb9b"
@@ -609,8 +579,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="8,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb9c"
@@ -618,8 +587,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="8,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb9d"
@@ -627,8 +595,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="8,3"
-                android:text="D"
-                />
+                android:text="D" />
         </RadioGroup>
 
         <TextView
@@ -638,7 +605,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup9"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
     <!-- Question 10-->
     <RelativeLayout
@@ -653,7 +620,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="10"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioGroup
             android:id="@+id/radioGroup10"
@@ -670,8 +637,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="9,0"
-                android:text="A"
-                />
+                android:text="A" />
 
             <RadioButton
                 android:id="@+id/rb10b"
@@ -679,8 +645,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="9,1"
-                android:text="B"
-                />
+                android:text="B" />
 
             <RadioButton
                 android:id="@+id/rb10c"
@@ -688,8 +653,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="9,2"
-                android:text="C"
-                />
+                android:text="C" />
 
             <RadioButton
                 android:id="@+id/rb10d"
@@ -697,8 +661,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="buttonClickListener"
                 android:tag="9,3"
-                android:text="D"
-                />
+                android:text="D" />
         </RadioGroup>
 
         <TextView
@@ -708,7 +671,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/radioGroup10"
             android:text="Ninguna"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
 
 
@@ -718,8 +681,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Matrix Loading......"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
     <TextView
@@ -727,7 +689,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Volume count"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
 </LinearLayout>
