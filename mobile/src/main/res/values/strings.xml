@@ -8,7 +8,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_main2" translatable="false">MainActivity</string>
 
-    <string name="Room_">"Room: "</string>
+    <string name="Room_">"You\'re in room "</string>
 
 
     <string name="first_slide_title">Welcome StudyLess</string>
@@ -22,4 +22,8 @@
     <string name="done">Done</string>
     <string name="skip">Skip</string>
     <string name="action_show_intro">Show help</string>
+    <string name="join">Join</string>
+    <string name="room_number">Numero de sala</string>
+    <string name="room">Sala</string>
+    <string name="loading">Loading...</string>
 </resources>

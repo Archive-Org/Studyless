@@ -1,5 +1,6 @@
 package com.company.studyless;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,17 +35,24 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10;
-    TextView result1, result2, result3, result4, result5, result6, result7, result8, result9, result10, matrixText, RoomTextView, volumecount;
+    RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17, G18, G19, G20;
+    TextView result1, result2, result3, result4, result5, result6, result7, result8, result9,
+            result10, result11, result12, result13, result14, result15, result16, result17, result18,
+            result19, result20, matrixText, volumecount;
+
     EditText roomField;
     DatabaseReference mDatabase;
     matrix matrix = new matrix();
     Random random = new Random();
     VolumeHandler volumeHandler = new VolumeHandler();
-    int room = random.nextInt(1000) + 1;
-    int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
+    int room = random.nextInt(100000);
+    int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
+            9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
+
     Toolbar toolbar;
     Vibrator vibratorService;
+    LinearLayout questionsLayout;
+    RelativeLayout loadingLayout;
 
 
     @Override
@@ -62,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Display activity main
         setContentView(R.layout.activity_main);
 
-        //Configure left menu and toolbar
+        //TODO implement inflator
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -76,11 +87,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Bind views
         bindObjects();
 
+        //Hide layout till db loaded
+        questionsLayout.setVisibility(View.GONE);
+
         //Initialize database and Vibrations
-        RoomTextView.setText(String.valueOf(room));
+        //RoomTextView.setText(String.valueOf(room));
         mDatabase = FirebaseDatabase.getInstance().getReference();
         vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         volumeHandler.setVibrator(vibratorService);
+
+        //Handle Show settings
+        if (prefs.getBoolean("showMatrix", false)) {
+            matrixText.setVisibility(View.VISIBLE);
+        } else {
+            matrixText.setVisibility(View.GONE);
+        }
+        if (prefs.getBoolean("showVolume", false)) {
+            volumecount.setVisibility(View.VISIBLE);
+        } else {
+            volumecount.setVisibility(View.GONE);
+        }
+
 
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -130,6 +157,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case 9:
                     G10.clearCheck();
                     break;
+                case 10:
+                    G11.clearCheck();
+                    break;
+                case 11:
+                    G12.clearCheck();
+                    break;
+                case 12:
+                    G13.clearCheck();
+                    break;
+                case 13:
+                    G14.clearCheck();
+                    break;
+                case 14:
+                    G15.clearCheck();
+                    break;
+                case 15:
+                    G16.clearCheck();
+                    break;
+                case 16:
+                    G17.clearCheck();
+                    break;
+                case 17:
+                    G18.clearCheck();
+                    break;
+                case 18:
+                    G19.clearCheck();
+                    break;
+                case 19:
+                    G20.clearCheck();
+                    break;
                 default:
                     break;
 
@@ -174,18 +231,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {
                 room = n;
                 mDatabase = FirebaseDatabase.getInstance().getReference();
-                G1.clearCheck();
-                G2.clearCheck();
-                G3.clearCheck();
-                G4.clearCheck();
-                G5.clearCheck();
-                G6.clearCheck();
-                G7.clearCheck();
-                G8.clearCheck();
-                G9.clearCheck();
-                G10.clearCheck();
-                RoomTextView.setText(getString(R.string.Room_) + String.valueOf(room));
-                checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
+                clearSelection();
+                //RoomTextView.setText(getString(R.string.Room_) + String.valueOf(room));
+                topButtonArray();
                 getDatabase();
             }
         }
@@ -197,6 +245,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void bindObjects() {
         //Better way to this ugly stuff?
+
+        questionsLayout = (LinearLayout) findViewById(R.id.questionsLayout);
+        loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
         G1 = (RadioGroup) findViewById(R.id.radioGroup1);
         G2 = (RadioGroup) findViewById(R.id.radioGroup2);
         G3 = (RadioGroup) findViewById(R.id.radioGroup3);
@@ -207,6 +258,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         G8 = (RadioGroup) findViewById(R.id.radioGroup8);
         G9 = (RadioGroup) findViewById(R.id.radioGroup9);
         G10 = (RadioGroup) findViewById(R.id.radioGroup10);
+        G11 = (RadioGroup) findViewById(R.id.radioGroup11);
+        G12 = (RadioGroup) findViewById(R.id.radioGroup12);
+        G13 = (RadioGroup) findViewById(R.id.radioGroup13);
+        G14 = (RadioGroup) findViewById(R.id.radioGroup14);
+        G15 = (RadioGroup) findViewById(R.id.radioGroup15);
+        G16 = (RadioGroup) findViewById(R.id.radioGroup16);
+        G17 = (RadioGroup) findViewById(R.id.radioGroup17);
+        G18 = (RadioGroup) findViewById(R.id.radioGroup18);
+        G19 = (RadioGroup) findViewById(R.id.radioGroup19);
+        G20 = (RadioGroup) findViewById(R.id.radioGroup20);
+
         result1 = (TextView) findViewById(R.id.resultado1);
         result2 = (TextView) findViewById(R.id.resultado2);
         result3 = (TextView) findViewById(R.id.resultado3);
@@ -217,9 +279,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         result8 = (TextView) findViewById(R.id.resultado8);
         result9 = (TextView) findViewById(R.id.resultado9);
         result10 = (TextView) findViewById(R.id.resultado10);
+        result11 = (TextView) findViewById(R.id.resultado11);
+        result12 = (TextView) findViewById(R.id.resultado12);
+        result13 = (TextView) findViewById(R.id.resultado13);
+        result14 = (TextView) findViewById(R.id.resultado14);
+        result15 = (TextView) findViewById(R.id.resultado15);
+        result16 = (TextView) findViewById(R.id.resultado16);
+        result17 = (TextView) findViewById(R.id.resultado17);
+        result18 = (TextView) findViewById(R.id.resultado18);
+        result19 = (TextView) findViewById(R.id.resultado19);
+        result20 = (TextView) findViewById(R.id.resultado20);
+
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
-        RoomTextView = (TextView) findViewById(R.id.RoomTextViex);
+        //RoomTextView = (TextView) findViewById(R.id.RoomTextViex);
         volumecount = (TextView) findViewById(R.id.volumecount);
 
     }
@@ -245,28 +318,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     result8.setText(matrix.MostVoted(7));
                     result9.setText(matrix.MostVoted(8));
                     result10.setText(matrix.MostVoted(9));
+                    result11.setText(matrix.MostVoted(10));
+                    result12.setText(matrix.MostVoted(11));
+                    result13.setText(matrix.MostVoted(12));
+                    result14.setText(matrix.MostVoted(13));
+                    result15.setText(matrix.MostVoted(14));
+                    result16.setText(matrix.MostVoted(15));
+                    result17.setText(matrix.MostVoted(16));
+                    result18.setText(matrix.MostVoted(17));
+                    result19.setText(matrix.MostVoted(18));
+                    result20.setText(matrix.MostVoted(19));
+                    loadingLayout.setVisibility(View.GONE);
+                    questionsLayout.setVisibility(View.VISIBLE);
+
                 } else {
-                    G1.clearCheck();
-                    G2.clearCheck();
-                    G3.clearCheck();
-                    G4.clearCheck();
-                    G5.clearCheck();
-                    G6.clearCheck();
-                    G7.clearCheck();
-                    G8.clearCheck();
-                    G9.clearCheck();
-                    G10.clearCheck();
-                    RoomTextView.setText("Sala: " + String.valueOf(room));
-                    checkedButtons = new int[]{9999,
-                            9999,
-                            9999,
-                            9999,
-                            9999,
-                            9999,
-                            9999,
-                            9999,
-                            9999,
-                            9999};
+                    clearSelection();
+                    roomField.setHint(getString(R.string.Room_) + String.valueOf(room));
+                    topButtonArray();
                     initializeRoom(room);
                 }
             }
@@ -317,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, setting.class);
+            Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
             return true;
         }
@@ -335,11 +403,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Fragment fragment = null;
         if (id == R.id.nav_questions) {
             // Handle the camera action
         } else if (id == R.id.nav_info) {
-
+            fragment = new Info();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -347,6 +415,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_send) {
 
         }
+
+        /*if (fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_layout, fragment).commit();
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -380,5 +454,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onKeyLongPress(keyCode, event);
     }
 
+
+    public void topButtonArray() {
+        checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
+                9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
+    }
+
+    public void clearSelection() {
+        G1.clearCheck();
+        G2.clearCheck();
+        G3.clearCheck();
+        G4.clearCheck();
+        G5.clearCheck();
+        G6.clearCheck();
+        G7.clearCheck();
+        G8.clearCheck();
+        G9.clearCheck();
+        G10.clearCheck();
+        G11.clearCheck();
+        G12.clearCheck();
+        G13.clearCheck();
+        G14.clearCheck();
+        G15.clearCheck();
+        G16.clearCheck();
+        G17.clearCheck();
+        G18.clearCheck();
+        G19.clearCheck();
+        G20.clearCheck();
+    }
 
 }

@@ -3,14 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:divider="?android:dividerHorizontal"
-    android:showDividers="middle"
-    android:dividerPadding="8dp"
+
     android:orientation="vertical"
-    android:padding="16dp"
+    android:id="@+id/questionsLayout"
 
     tools:context="com.company.studyless.MainActivity">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+    android:divider="?android:dividerHorizontal"
+    android:showDividers="middle"
+    android:dividerPadding="8dp"
+        android:id="@+id/questionsLayout"
+
+    tools:context="com.company.studyless.MainActivity">
     <!-- Question 1-->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -673,23 +683,719 @@
             android:text="Ninguna"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
+        <!-- Question 11-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="11"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
 
 
-    <TextView
+                <RadioButton
+                    android:id="@+id/rb11a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="10,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb11b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="10,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb11c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="10,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb11d"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="10,3"
+                    android:text="D" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup11"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+        <!-- Question 12-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="12"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb12a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="11,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb12b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="11,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb12c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="11,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb12d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="11,3"
+                    android:text="D" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup12"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+        <!-- Question 13-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="13"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb13a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="12,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb13b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="12,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb13c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="12,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb13d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="12,3"
+                    android:text="D" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup13"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+        <!-- Question 14-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="14"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb14a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="13,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb14b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="13,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb14c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="13,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb14d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="13,3"
+                    android:text="D" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup14"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+        <!-- Question 15-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="15"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb15a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="14,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb15b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="14,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb15c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="14,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb15d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="14,3"
+                    android:text="D" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup15"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+        <!-- Question 16-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="16"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb16a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="15,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb16b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="15,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb16c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="15,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb16d"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="15,3"
+                    android:text="D" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup16"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+        <!-- Question 17-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="17"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb17a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="6,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb17b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="16,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb17c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="16,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb17d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="16,3"
+                    android:text="D" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup17"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+        <!-- Question 18-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="18"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb18a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="17,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb18b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="17,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb18c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="17,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb18d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="17,3"
+                    android:text="D" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup18"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+        <!-- Question 19-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="19"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb19a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="18,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb19b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="18,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb19c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="18,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb19d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="18,3"
+                    android:text="D" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup19"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+        <!-- Question 20-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="20"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb20a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="19,0"
+                    android:text="A" />
+
+                <RadioButton
+                    android:id="@+id/rb20b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="19,1"
+                    android:text="B" />
+
+                <RadioButton
+                    android:id="@+id/rb20c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="19,2"
+                    android:text="C" />
+
+                <RadioButton
+                    android:id="@+id/rb20d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="buttonClickListener"
+                    android:tag="19,3"
+                    android:text="D" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/resultado20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/radioGroup20"
+                android:text="Ninguna"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+
+
+        <TextView
         android:id="@+id/matrixText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Matrix Loading......"
         android:textAppearance="?android:attr/textAppearanceSmall" />
-
-
     <TextView
         android:id="@+id/volumecount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Volume count"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
+
+    <!-- Room Bottom bar -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/join"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="changeRoom"
+            android:text="@string/join" />
+
+        <EditText
+            android:id="@+id/roomField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/join"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/join"
+            android:ems="10"
+            android:hint="@string/room_number"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLength="9"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </RelativeLayout>
 
 
 </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="Room_">"Sala: "</string>
+    <string name="Room_">"Estas en la sala "</string>
 
     <string name="first_slide_title">Bienvenido a StudyLess</string>
     <string name="first_slide_description">Ten mas tiempo libre</string>
@@ -17,5 +17,9 @@
     <string name="done">Continuar</string>
     <string name="skip">Saltar</string>
     <string name="action_show_intro">Mostrar ayuda</string>
+    <string name="join">Unirse</string>
+    <string name="room_number">Numero de sala</string>
+    <string name="room">Sala</string>
+    <string name="loading">Loading...</string>
 
 </resources>

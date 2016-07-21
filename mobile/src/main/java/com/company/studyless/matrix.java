@@ -3,7 +3,7 @@ package com.company.studyless;
 import java.util.ArrayList;
 
 public class matrix {
-    public int questionsRows = 10;
+    public int questionsRows = 20;
     private int[][] Data = new int[questionsRows][4];
 
     public int[][] getData() {
