@@ -6,7 +6,7 @@ import android.os.Vibrator;
 public class VolumeHandler {
     public int volumePressedCount = 0;
     public long lastTime = 0L;
-    int delay = 4000;
+    int delay = 1000;
     public Long lastWorker = 0L;
     Vibrator vibrator;
 

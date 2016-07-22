@@ -12,7 +12,7 @@
 
 
     <string name="first_slide_title">Welcome StudyLess</string>
-    <string name="first_slide_description">Have more free time</string>
+    <string name="first_slide_description">Have more time to do what you like</string>
 
     <string name="second_slide_title">Second Title</string>
     <string name="second_slide_description">Description here</string>
@@ -25,5 +25,11 @@
     <string name="join">Join</string>
     <string name="room_number">Numero de sala</string>
     <string name="room">Sala</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading answers...</string>
+    <string name="show_matrix">Show matrix</string>
+    <string name="show_volume_count">Show volume press count</string>
+    <string name="tie">Tie</string>
+    <string name="Already_in_room">Already in room</string>
+    <string name="nav_title" translatable="false">StudyLess</string>
+    <string name="nav_subtitle">Developed by Alejandro Pacheco</string>
 </resources>

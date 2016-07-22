@@ -63,12 +63,4 @@ public class Settings extends Activity {
         }
     }
 
-    public boolean getShowMatrix() {
-        return prefs.getBoolean("showMatrix", false);
-
-    }
-
-    public boolean getShowVolume() {
-        return prefs.getBoolean("showVolume", false);
-    }
 }

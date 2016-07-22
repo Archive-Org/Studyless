@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
 
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntro2Fragment;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class Intro extends AppIntro {
 
@@ -15,41 +15,45 @@ public class Intro extends AppIntro {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Add your slide's fragments here.
-        // AppIntro will automatically generate the dots indicator and buttons.
-
-
-        // Instead of fragments, you can also use our default slide
-        // Just set a title, description, background and image. AppIntro will do the rest.
+        //Welcome have more free time… enjoy…
         addSlide(AppIntro2Fragment.newInstance(
-                getResources().getString(R.string.first_slide_title), getResources().getString(R.string.first_slide_description),
-                R.drawable.ic_arrow_forward_white_24px, Color.parseColor("#4CAF50")));
+                getResources().getString(R.string.first_slide_title),
+                getResources().getString(R.string.first_slide_description),
+                R.drawable.ic_smile,
+                Color.parseColor("#2BC55E")));
 
+        //Get the best response with your friedns
         addSlide(AppIntro2Fragment.newInstance(
-                getResources().getString(R.string.second_slide_title), getResources().getString(R.string.second_slide_description),
-                R.drawable.ic_arrow_forward_white_24px, Color.parseColor("#4CAF50")));
+                getResources().getString(R.string.second_slide_title),
+                getResources().getString(R.string.second_slide_description),
+                R.drawable.ic_thumbs_up_down,
+                Color.parseColor("#DE6461")));
 
+        //Share the questions you know and see what your friends think is the one
         addSlide(AppIntro2Fragment.newInstance(
-                getResources().getString(R.string.third_slide_title), getResources().getString(R.string.third_slide_description),
-                R.drawable.ic_arrow_forward_white_24px, Color.parseColor("#4CAF50")));
+                getResources().getString(R.string.third_slide_title),
+                getResources().getString(R.string.third_slide_description),
+                R.drawable.ic_tik,
+                Color.parseColor("#B44E86")));
 
-        // OPTIONAL METHODS
-        // Override bar/separator color.
-        //setBarColor(Color.parseColor("#3F51B5"));
-        //setSeparatorColor(Color.parseColor("#2196F3"));
+        //Be descret getings the answers via vibrations
+        addSlide(AppIntro2Fragment.newInstance(
+                getResources().getString(R.string.third_slide_title),
+                getResources().getString(R.string.third_slide_description),
+                R.drawable.ic_vibration,
+                Color.parseColor("#B44E86")));
 
-        // Hide Skip/Done button.
+        //disclaimer
+        addSlide(AppIntro2Fragment.newInstance(
+                getResources().getString(R.string.third_slide_title),
+                getResources().getString(R.string.third_slide_description),
+                R.drawable.ic_important,
+                Color.parseColor("#B44E86")));
+
+
         showSkipButton(true);
-        // Turn vibration on and set intensity.
-        // NOTE: you will probably need to ask VIBRATE permisssion in Manifest.
-        setVibrate(true);
-        setVibrateIntensity(30);
         setProgressButtonEnabled(true);
-
-        // Turn vibration on and set intensity.
-        // NOTE: you will probably need to ask VIBRATE permisssion in Manifest.
-        setVibrate(true);
-        setVibrateIntensity(300);
+        setVibrate(false);
         setDoneText(getResources().getString(R.string.done));
         setSkipText(getResources().getString(R.string.skip));
     }
@@ -62,13 +66,25 @@ public class Intro extends AppIntro {
     @Override
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
+        ConfigureGoogleSingIn();
         loadMainActivity();
-        Toast.makeText(getApplicationContext(), "Skip", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Skip", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
+        ConfigureGoogleSingIn();
+
         loadMainActivity();
+
+    }
+
+    void ConfigureGoogleSingIn() {
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
     }
 }

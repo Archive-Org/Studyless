@@ -1,9 +1,11 @@
 package com.company.studyless;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -35,24 +37,22 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17, G18, G19, G20;
-    TextView result1, result2, result3, result4, result5, result6, result7, result8, result9,
+    private RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17, G18, G19, G20;
+    private TextView result1, result2, result3, result4, result5, result6, result7, result8, result9,
             result10, result11, result12, result13, result14, result15, result16, result17, result18,
             result19, result20, matrixText, volumecount;
 
-    EditText roomField;
-    DatabaseReference mDatabase;
-    matrix matrix = new matrix();
-    Random random = new Random();
-    VolumeHandler volumeHandler = new VolumeHandler();
-    int room = random.nextInt(100000);
-    int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
+    private EditText roomField;
+    private DatabaseReference mDatabase;
+    private matrix matrix = new matrix();
+    private Random random = new Random();
+    private VolumeHandler volumeHandler = new VolumeHandler();
+    private int room = random.nextInt(100000);
+    private int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
 
-    Toolbar toolbar;
-    Vibrator vibratorService;
-    LinearLayout questionsLayout;
-    RelativeLayout loadingLayout;
+    private LinearLayout questionsLayout;
+    private RelativeLayout loadingLayout;
 
 
     @Override
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //TODO implement inflator
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Initialize database and Vibrations
         //RoomTextView.setText(String.valueOf(room));
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         volumeHandler.setVibrator(vibratorService);
 
         //Handle Show settings
@@ -197,18 +197,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-    public void plusOneEntry(int row, int column) {
+    private void plusOneEntry(int row, int column) {
         int value = matrix.getData()[row][column] + 1;
         mDatabase.child("room_" + room).child(row + "/" + column + "").setValue(value);
     }
 
-    public void lessOneEntry(int row, int column) {
+    private void lessOneEntry(int row, int column) {
         int value = matrix.getData()[row][column] - 1;
         mDatabase.child("room_" + room).child(row + "/" + column + "").setValue(value);
     }
 
-    public void initializeRoom(int roomNumber) {
+    private void initializeRoom(int roomNumber) {
         int e = 0;
         int i = 0;
         while (e < matrix.questionsRows) {
@@ -227,12 +226,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int n = Integer.parseInt(roomField.getText().toString());
 
             if (room == n) {
-                Toast.makeText(getApplicationContext(), "Ya en sala", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.Already_in_room, Toast.LENGTH_SHORT).show();
             } else {
                 room = n;
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 clearSelection();
-                //RoomTextView.setText(getString(R.string.Room_) + String.valueOf(room));
                 topButtonArray();
                 getDatabase();
             }
@@ -243,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void bindObjects() {
+    private void bindObjects() {
         //Better way to this ugly stuff?
 
         questionsLayout = (LinearLayout) findViewById(R.id.questionsLayout);
@@ -297,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void getDatabase() {
+    private void getDatabase() {
         mDatabase.child("room_" + room).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -308,26 +306,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             matrix.questionsRows,
                             4));
 
-                    result1.setText(matrix.MostVoted(0));
-                    result2.setText(matrix.MostVoted(1));
-                    result3.setText(matrix.MostVoted(2));
-                    result4.setText(matrix.MostVoted(3));
-                    result5.setText(matrix.MostVoted(4));
-                    result6.setText(matrix.MostVoted(5));
-                    result7.setText(matrix.MostVoted(6));
-                    result8.setText(matrix.MostVoted(7));
-                    result9.setText(matrix.MostVoted(8));
-                    result10.setText(matrix.MostVoted(9));
-                    result11.setText(matrix.MostVoted(10));
-                    result12.setText(matrix.MostVoted(11));
-                    result13.setText(matrix.MostVoted(12));
-                    result14.setText(matrix.MostVoted(13));
-                    result15.setText(matrix.MostVoted(14));
-                    result16.setText(matrix.MostVoted(15));
-                    result17.setText(matrix.MostVoted(16));
-                    result18.setText(matrix.MostVoted(17));
-                    result19.setText(matrix.MostVoted(18));
-                    result20.setText(matrix.MostVoted(19));
+                    result1.setText(betterMostVoted(0));
+                    result2.setText(betterMostVoted(1));
+                    result3.setText(betterMostVoted(2));
+                    result4.setText(betterMostVoted(3));
+                    result5.setText(betterMostVoted(4));
+                    result6.setText(betterMostVoted(5));
+                    result7.setText(betterMostVoted(6));
+                    result8.setText(betterMostVoted(7));
+                    result9.setText(betterMostVoted(8));
+                    result10.setText(betterMostVoted(9));
+                    result11.setText(betterMostVoted(10));
+                    result12.setText(betterMostVoted(11));
+                    result13.setText(betterMostVoted(12));
+                    result14.setText(betterMostVoted(13));
+                    result15.setText(betterMostVoted(14));
+                    result16.setText(betterMostVoted(15));
+                    result17.setText(betterMostVoted(16));
+                    result18.setText(betterMostVoted(17));
+                    result19.setText(betterMostVoted(18));
+                    result20.setText(betterMostVoted(19));
+
                     loadingLayout.setVisibility(View.GONE);
                     questionsLayout.setVisibility(View.VISIBLE);
 
@@ -340,13 +339,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {  }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
 
     }
 
-    public boolean isChecked(int row, int colum) {
+    private boolean isChecked(int row, int colum) {
         if (checkedButtons[row] == colum) {
             checkedButtons[row] = 9999;
             return true;
@@ -370,12 +370,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_activity, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -398,6 +400,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return super.onOptionsItemSelected(item);
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -405,27 +408,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         Fragment fragment = null;
         if (id == R.id.nav_questions) {
-            // Handle the camera action
+            questionsLayout.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_info) {
             fragment = new Info();
+            questionsLayout.setVisibility(View.GONE);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-
+            fragment = new Share();
+            questionsLayout.setVisibility(View.GONE);
         } else if (id == R.id.nav_send) {
 
         }
 
-        /*if (fragment != null) {
+        if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_layout, fragment).commit();
-        }*/
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
@@ -434,20 +440,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return super.onKeyDown(keyCode, event);
     }
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             volumecount.setText(String.valueOf(volumeHandler.handleVolume(1)));
-            new VolumeChecherThreath().execute(volumeHandler);
+            triggerThread();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            volumecount.setText(String.valueOf(volumeHandler.handleVolume(5)));
+            triggerThread();
+
             return true;
         }
         return super.onKeyUp(keyCode, event);
     }
+
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            volumecount.setText(String.valueOf(volumeHandler.handleVolume(4)));
-            new VolumeChecherThreath().execute(volumeHandler);
+            //volumecount.setText(String.valueOf(volumeHandler.handleVolume(4)));
+            //triggerThread();
 
             return true;
         }
@@ -455,12 +469,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void topButtonArray() {
+    private void topButtonArray() {
         checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
                 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
     }
 
-    public void clearSelection() {
+    private void clearSelection() {
         G1.clearCheck();
         G2.clearCheck();
         G3.clearCheck();
@@ -482,5 +496,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         G19.clearCheck();
         G20.clearCheck();
     }
+
+    private void triggerThread() {
+        VolumeThreadObject data = new VolumeThreadObject();
+        data.setVh(volumeHandler);
+        data.setMatrix(matrix);
+        new VolumeCheckerThread().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
+    }
+
+    String betterMostVoted(int row) {
+        if (matrix.MostVoted(row) == "???") {
+            return getString(R.string.tie);
+        } else {
+            return matrix.MostVoted(row);
+        }
+    }
+
+
 
 }

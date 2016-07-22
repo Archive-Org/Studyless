@@ -4,7 +4,7 @@
     <string name="Room_">"Estas en la sala "</string>
 
     <string name="first_slide_title">Bienvenido a StudyLess</string>
-    <string name="first_slide_description">Ten mas tiempo libre</string>
+    <string name="first_slide_description">Ten mas tiempo para hacer lo que te guste</string>
 
     <string name="second_slide_title">Segundo Titulo</string>
     <string name="second_slide_description">Esta es la descripcion</string>
@@ -20,6 +20,11 @@
     <string name="join">Unirse</string>
     <string name="room_number">Numero de sala</string>
     <string name="room">Sala</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Descargando respuestas...</string>
+    <string name="show_matrix">Mostrar matrix</string>
+    <string name="show_volume_count">Mostrar cuenta pulsaciones</string>
+    <string name="tie">Empate</string>
+    <string name="Already_in_room">Ya en sala</string>
+    <string name="nav_subtitle">Desarollado por Alejandro Pacheco</string>
 
 </resources>
