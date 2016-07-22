@@ -12,13 +12,13 @@
 
 
     <string name="first_slide_title">Welcome StudyLess</string>
-    <string name="first_slide_description">Have more time to do what you like</string>
+    <string name="first_slide_description">Have more time to do what you like and get more productive</string>
 
-    <string name="second_slide_title">Second Title</string>
-    <string name="second_slide_description">Description here</string>
+    <string name="second_slide_title">Get the best response with the help of your friends</string>
+    <string name="second_slide_description">Join together to the same room and vote for the best answer, the app will sum the votes and show the best, no more confussions with conflicting opinions</string>
 
-    <string name="third_slide_title">third title</string>
-    <string name="third_slide_description">This is the third description</string>
+    <string name="third_slide_title">Collaborate with your classmates</string>
+    <string name="third_slide_description">The more people the best, every room can have up to 10000 people, I bet your class doen\'t have that much</string>
     <string name="done">Done</string>
     <string name="skip">Skip</string>
     <string name="action_show_intro">Show help</string>
@@ -28,8 +28,14 @@
     <string name="loading">Loading answers...</string>
     <string name="show_matrix">Show matrix</string>
     <string name="show_volume_count">Show volume press count</string>
-    <string name="tie">Tie</string>
+    <string name="tie">Not sure</string>
     <string name="Already_in_room">Already in room</string>
     <string name="nav_title" translatable="false">StudyLess</string>
     <string name="nav_subtitle">Developed by Alejandro Pacheco</string>
+    <string name="forth_slide_title">Be descret, get the answers via vibrations</string>
+    <string name="forth_slide_description">Use your phone volume keys to choose the question and the phone will vibrate based on the most voted answers (1 times for a, 2 times for b...)</string>
+    <string name="fifth_slide_title">Disclaimer</string>
+    <string name="fifth_slide_description">I am not responsible for the use you make of this app, do not say I did not advert. The porpouse of this app is to communicate via a non-intrusive way</string>
+    <string name="share_body">Hey, take a look at StudyLess, we can use it.</string>
+    <string name="Share_via">Share via</string>
 </resources>

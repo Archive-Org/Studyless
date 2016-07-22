@@ -6,8 +6,8 @@
     <string name="first_slide_title">Bienvenido a StudyLess</string>
     <string name="first_slide_description">Ten mas tiempo para hacer lo que te guste</string>
 
-    <string name="second_slide_title">Segundo Titulo</string>
-    <string name="second_slide_description">Esta es la descripcion</string>
+    <string name="second_slide_title">Consigue la mejor respuesta con la ayuda de tus amigos</string>
+    <string name="second_slide_description">Unete con tus compañeros a la misma sala y votad por la mejor respuesta, la app sumara y the mostrara la mas votada, no mas confisiones por opiniones conflictivas</string>
 
     <string name="third_slide_title">Tercer Titulo</string>
     <string name="third_slide_description">Esta es la descripcion</string>
@@ -26,5 +26,11 @@
     <string name="tie">Empate</string>
     <string name="Already_in_room">Ya en sala</string>
     <string name="nav_subtitle">Desarollado por Alejandro Pacheco</string>
+    <string name="fifth_slide_title">Descargo de responabilidad</string>
+    <string name="fifth_slide_description">El usuario final es responsble del uso de que se le da a la aplicacion, el desarollador no se hace responsable de el mal uso de esta aplicacion. El propasito de esta aplicacion es el de comunicarse de una forma no intrusiva</string>
+    <string name="forth_slide_title">Se dicreto, opten las respuestas por vibraciones</string>
+    <string name="forth_slide_description">Usa las teclas de volumen de tu telefono para elegir la pregunta y el telefono vibrara acorde con la respuesta (1 vez para a, 2 veces para b, etc)</string>
+    <string name="share_body">Hechale un vistazo a Studyless, podriamos usarla</string>
+    <string name="Share_via">Compartir mediante</string>
 
 </resources>

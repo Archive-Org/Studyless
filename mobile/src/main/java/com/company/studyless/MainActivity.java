@@ -5,11 +5,14 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,6 +22,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -36,11 +40,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Random;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17, G18, G19, G20;
-    private TextView result1, result2, result3, result4, result5, result6, result7, result8, result9,
-            result10, result11, result12, result13, result14, result15, result16, result17, result18,
-            result19, result20, matrixText, volumecount;
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+    private RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17,
+            G18, G19, G20;
+
+    private TextView result1, result2, result3, result4, result5, result6, result7, result8,
+            result9, result10, result11, result12, result13, result14, result15, result16,
+            result17, result18, result19, result20, matrixText, volumecount;
+
 
     private EditText roomField;
     private DatabaseReference mDatabase;
@@ -48,12 +56,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Random random = new Random();
     private VolumeHandler volumeHandler = new VolumeHandler();
     private int room = random.nextInt(100000);
-    private int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
-            9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
-
+    private int[] checkedButtons = {
+            9999, 9999, 9999, 9999, 9999,
+            9999, 9999, 9999, 9999, 9999,
+            9999, 9999, 9999, 9999, 9999,
+            9999, 9999, 9999, 9999, 9999
+    };
     private LinearLayout questionsLayout;
     private RelativeLayout loadingLayout;
 
+    String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#CEFF1A", "#1B2D2A"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +76,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         boolean previouslyStarted = prefs.getBoolean("Previously started", false);
         if (!previouslyStarted) {
             SharedPreferences.Editor edit = prefs.edit();
-            edit.putBoolean("Previously started", Boolean.TRUE);
-            edit.apply();
+            edit.putBoolean("Previously started", Boolean.TRUE).apply();
             Intent intent = new Intent(this, Intro.class);
             startActivity(intent);
         }
         //Display activity main
         setContentView(R.layout.activity_main);
-
         //TODO implement inflator
 
+        /*FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, new question_list()).commit();
+*/
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        int randomColor = Color.parseColor(colorsArray[random.nextInt(colorsArray.length)]);
+        int darkerColor = ColorUtils.blendARGB(randomColor, Color.parseColor("#000000"), 0.2F);
+
+        toolbar.setBackgroundColor(randomColor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(darkerColor);
+        }
+
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -226,7 +251,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int n = Integer.parseInt(roomField.getText().toString());
 
             if (room == n) {
-                Toast.makeText(getApplicationContext(), R.string.Already_in_room, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        R.string.Already_in_room,
+                        Toast.LENGTH_SHORT).show();
+
             } else {
                 room = n;
                 mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -408,15 +436,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         Fragment fragment = null;
         if (id == R.id.nav_questions) {
-            questionsLayout.setVisibility(View.VISIBLE);
+            //questionsLayout.setVisibility(View.VISIBLE);
+            //
+            fragment = new question_list();
         } else if (id == R.id.nav_info) {
             fragment = new Info();
             questionsLayout.setVisibility(View.GONE);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-            fragment = new Share();
-            questionsLayout.setVisibility(View.GONE);
+
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND)
+                    .setType("text/plain")
+                    .putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here")
+                    .putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_body));
+
+            startActivity(Intent.createChooser(sharingIntent, getString(R.string.Share_via)));
+
         } else if (id == R.id.nav_send) {
 
         }
@@ -511,7 +547,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return matrix.MostVoted(row);
         }
     }
-
 
 
 }
