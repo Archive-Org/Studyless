@@ -1,10 +1,16 @@
 package com.company.studyless;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,14 +24,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,14 +50,12 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#CEFF1A", "#1B2D2A"};
     private RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17,
             G18, G19, G20;
-
     private TextView result1, result2, result3, result4, result5, result6, result7, result8,
             result9, result10, result11, result12, result13, result14, result15, result16,
             result17, result18, result19, result20, matrixText, volumecount;
-
-
     private EditText roomField;
     private DatabaseReference mDatabase;
     private matrix matrix = new matrix();
@@ -62,10 +68,7 @@ public class MainActivity extends AppCompatActivity
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999
     };
-    private LinearLayout questionsLayout;
-    private RelativeLayout loadingLayout;
-
-    String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#CEFF1A", "#1B2D2A"};
+    private RelativeLayout loadingLayout, infoLayout, questionsLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +81,14 @@ public class MainActivity extends AppCompatActivity
             SharedPreferences.Editor edit = prefs.edit();
             edit.putBoolean("Previously started", Boolean.TRUE).apply();
             Intent intent = new Intent(this, Intro.class);
+
             startActivity(intent);
         }
         //Display activity main
         setContentView(R.layout.activity_main);
+        setupWindowAnimations();
+
+
         //TODO implement inflator
 
         /*FragmentManager fragmentManager = getFragmentManager();
@@ -90,9 +97,10 @@ public class MainActivity extends AppCompatActivity
 */
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        int randomColor = Color.parseColor(colorsArray[random.nextInt(colorsArray.length)]);
-        int darkerColor = ColorUtils.blendARGB(randomColor, Color.parseColor("#000000"), 0.2F);
 
+        //Change colors and startup
+        int randomColor = Color.parseColor(colorsArray[random.nextInt(colorsArray.length)]);
+        int darkerColor = ColorUtils.blendARGB(randomColor, Color.BLACK, 0.2F);
         toolbar.setBackgroundColor(randomColor);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -104,7 +112,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        //drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -114,7 +122,7 @@ public class MainActivity extends AppCompatActivity
 
         //Hide layout till db loaded
         questionsLayout.setVisibility(View.GONE);
-
+        loadingLayout.setVisibility(View.VISIBLE);
         //Initialize database and Vibrations
         //RoomTextView.setText(String.valueOf(room));
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -137,6 +145,8 @@ public class MainActivity extends AppCompatActivity
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
+
+
         //Fetch data
         getDatabase();
 
@@ -144,6 +154,7 @@ public class MainActivity extends AppCompatActivity
 
     //Handle all matrix buttons
     public void buttonClickListener(View v) {
+        hidekb();
         //Split buttons tags
         String tag = (String) v.getTag();
         String[] parts = tag.split(",");
@@ -259,7 +270,10 @@ public class MainActivity extends AppCompatActivity
                 room = n;
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 clearSelection();
+                loadingLayout.setVisibility(View.VISIBLE);
+                questionsLayout.setVisibility(View.GONE);
                 topButtonArray();
+                hidekb();
                 getDatabase();
             }
         }
@@ -271,9 +285,6 @@ public class MainActivity extends AppCompatActivity
 
     private void bindObjects() {
         //Better way to this ugly stuff?
-
-        questionsLayout = (LinearLayout) findViewById(R.id.questionsLayout);
-        loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
         G1 = (RadioGroup) findViewById(R.id.radioGroup1);
         G2 = (RadioGroup) findViewById(R.id.radioGroup2);
         G3 = (RadioGroup) findViewById(R.id.radioGroup3);
@@ -318,8 +329,11 @@ public class MainActivity extends AppCompatActivity
 
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
-        //RoomTextView = (TextView) findViewById(R.id.RoomTextViex);
         volumecount = (TextView) findViewById(R.id.volumecount);
+        questionsLayout = (RelativeLayout) findViewById(R.id.questionsLayoutRoot);
+        loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
+
+
 
     }
 
@@ -357,6 +371,7 @@ public class MainActivity extends AppCompatActivity
 
                     loadingLayout.setVisibility(View.GONE);
                     questionsLayout.setVisibility(View.VISIBLE);
+                    //showNotification();
 
                 } else {
                     clearSelection();
@@ -429,39 +444,39 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+
         Fragment fragment = null;
+        int id = item.getItemId();
         if (id == R.id.nav_questions) {
-            //questionsLayout.setVisibility(View.VISIBLE);
-            //
-            fragment = new question_list();
+            questionsLayout.setVisibility(View.VISIBLE);
+            fragment = new BlancFragment();
         } else if (id == R.id.nav_info) {
             fragment = new Info();
             questionsLayout.setVisibility(View.GONE);
-        } else if (id == R.id.nav_manage) {
-
+            hidekb();
         } else if (id == R.id.nav_share) {
 
-            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND)
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND)
                     .setType("text/plain")
-                    .putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here")
+                    .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.Share_subject))
                     .putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_body));
 
             startActivity(Intent.createChooser(sharingIntent, getString(R.string.Share_via)));
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_layout, fragment).commit();
+        } else {
+            this.getFragmentManager().popBackStack();
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -541,11 +556,76 @@ public class MainActivity extends AppCompatActivity
     }
 
     String betterMostVoted(int row) {
-        if (matrix.MostVoted(row) == "???") {
+        if (matrix.MostVoted(row) == "?") {
             return getString(R.string.tie);
         } else {
             return matrix.MostVoted(row);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupWindowAnimations() {
+        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
+        getWindow().setExitTransition(slide);
+    }
+
+    private void showNotification() {
+
+        Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher),
+                getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width),
+                getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height),
+                true);
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 01, intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Notification.Builder builder = new Notification.Builder(getApplicationContext());
+        builder.setContentTitle(mostVoted2String());
+        builder.setContentText("By Studyless");
+        //builder.setSubText("Some sub text");
+        builder.setNumber(101);
+        builder.setContentIntent(pendingIntent);
+        //builder.setTicker("Fancy Notification");
+        builder.setSmallIcon(R.drawable.ic_tik);
+        builder.setLargeIcon(bm);
+        builder.setAutoCancel(true);
+        builder.setPriority(Notification.PRIORITY_MAX);
+        builder.setOngoing(true);
+
+        builder.setSmallIcon(android.R.color.transparent); //Tested and worked in API 14
+        Notification notification = builder.build();
+        NotificationManager notificationManger =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManger.notify(01, notification);
+    }
+
+    private void hidekb() {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    private String mostVoted2String() {
+        return matrix.MostVoted(0) +
+                matrix.MostVoted(1) +
+                matrix.MostVoted(2) +
+                matrix.MostVoted(3) +
+                matrix.MostVoted(4) +
+                matrix.MostVoted(5) +
+                matrix.MostVoted(6) +
+                matrix.MostVoted(7) +
+                matrix.MostVoted(8) +
+                matrix.MostVoted(9) +
+                matrix.MostVoted(10) +
+                matrix.MostVoted(11) +
+                matrix.MostVoted(12) +
+                matrix.MostVoted(13) +
+                matrix.MostVoted(14) +
+                matrix.MostVoted(15) +
+                matrix.MostVoted(16) +
+                matrix.MostVoted(17) +
+                matrix.MostVoted(18) +
+                matrix.MostVoted(19);
     }
 
 

@@ -5,29 +5,22 @@
         <item
             android:id="@+id/nav_questions"
             android:checked="true"
-            android:icon="@mipmap/ic_questions"
-            android:title="Preguntas"/>
+            android:icon="@drawable/ic_done_all_black_24dp"
+            android:title="@string/questions" />
 
         <item
             android:id="@+id/nav_info"
-            android:icon="@drawable/ic_info"
-            android:title="Information"/>
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools"/>
+            android:icon="@drawable/ic_info_black_24dp"
+            android:title="@string/information" />
+
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share"/>
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send"/>
+                android:title="@string/share" />
         </menu>
     </item>
 

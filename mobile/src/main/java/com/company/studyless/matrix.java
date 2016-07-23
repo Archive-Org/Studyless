@@ -32,7 +32,7 @@ class matrix {
     }
 
     String MostVoted(int row) {
-        String a = "???";
+        String a = "?";
         if (Data[row][0] > Data[row][1] && Data[row][0] > Data[row][2] && Data[row][0] > Data[row][3]) {
             a = "A";
         } else if (Data[row][1] > Data[row][0] && Data[row][1] > Data[row][2] && Data[row][1] > Data[row][3]) {
