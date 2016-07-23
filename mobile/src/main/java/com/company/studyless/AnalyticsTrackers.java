@@ -1,3 +1,11 @@
+/*
+ *  Copyright (C) Alejandro Pacheco - All Rights Reserved
+ *  * Unauthorized copying of this file, via any medium is strictly prohibited
+ *  * Proprietary and confidential
+ *  * Written by  Alejandro Pacheco Bobillo <alepacheco99@gmail.com>
+ *
+ */
+
 package com.company.studyless;
 
 import android.content.Context;
@@ -20,12 +28,16 @@ import java.util.Map;
  */
 public final class AnalyticsTrackers {
 
-  public enum Target {
-    APP,
-    // Add more trackers here if you need, and update the code in #get(Target) below
-  }
-
   private static AnalyticsTrackers sInstance;
+  private final Map<Target, Tracker> mTrackers = new HashMap<Target, Tracker>();
+  private final Context mContext;
+
+  /**
+   * Don't instantiate directly - use {@link #getInstance()} instead.
+   */
+  private AnalyticsTrackers(Context context) {
+    mContext = context.getApplicationContext();
+  }
 
   public static synchronized void initialize(Context context) {
     if (sInstance != null) {
@@ -43,16 +55,6 @@ public final class AnalyticsTrackers {
     return sInstance;
   }
 
-  private final Map<Target, Tracker> mTrackers = new HashMap<Target, Tracker>();
-  private final Context mContext;
-
-  /**
-   * Don't instantiate directly - use {@link #getInstance()} instead.
-   */
-  private AnalyticsTrackers(Context context) {
-    mContext = context.getApplicationContext();
-  }
-
   public synchronized Tracker get(Target target) {
     if (!mTrackers.containsKey(target)) {
       Tracker tracker;
@@ -67,5 +69,10 @@ public final class AnalyticsTrackers {
     }
 
     return mTrackers.get(target);
+  }
+
+  public enum Target {
+    APP,
+    // Add more trackers here if you need, and update the code in #get(Target) below
   }
 }

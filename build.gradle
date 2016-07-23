@@ -1,3 +1,11 @@
+/*
+ *  Copyright (C) Alejandro Pacheco - All Rights Reserved
+ *  * Unauthorized copying of this file, via any medium is strictly prohibited
+ *  * Proprietary and confidential
+ *  * Written by  Alejandro Pacheco Bobillo <alepacheco99@gmail.com>
+ *
+ */
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {

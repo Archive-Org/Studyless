@@ -1,16 +1,16 @@
 <!--
-  ~ Copyright (c) 2016. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  ~ /* Copyright (C) Alejandro Pacheco - All Rights Reserved
+  ~  * Unauthorized copying of this file, via any medium is strictly prohibited
+  ~  * Proprietary and confidential
+  ~  * Written by  Alejandro Pacheco Bobillo <alepacheco99@gmail.com>
+  ~  */
   -->
 
-<vector android:height="264dp"
-    android:viewportHeight="24.0"
-    android:viewportWidth="24.0"
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="264dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:height="264dp"
+    android:viewportHeight="24.0"
+    android:viewportWidth="24.0">
     <path
         android:fillColor="#FF000000"
         android:pathData="M1,21h22L12,2 1,21zM13,18h-2v-2h2v2zM13,14h-2v-4h2v4z" />

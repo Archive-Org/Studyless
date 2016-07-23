@@ -1,3 +1,11 @@
+/*
+ *  Copyright (C) Alejandro Pacheco - All Rights Reserved
+ *  * Unauthorized copying of this file, via any medium is strictly prohibited
+ *  * Proprietary and confidential
+ *  * Written by  Alejandro Pacheco Bobillo <alepacheco99@gmail.com>
+ *
+ */
+
 package com.company.studyless;
 
 import java.util.ArrayList;

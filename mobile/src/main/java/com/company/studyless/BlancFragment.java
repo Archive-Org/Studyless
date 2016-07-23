@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2016. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ *  Copyright (C) Alejandro Pacheco - All Rights Reserved
+ *  * Unauthorized copying of this file, via any medium is strictly prohibited
+ *  * Proprietary and confidential
+ *  * Written by  Alejandro Pacheco Bobillo <alepacheco99@gmail.com>
+ *
  */
 
 package com.company.studyless;
