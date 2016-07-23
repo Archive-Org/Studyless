@@ -15,4 +15,8 @@ public class Info extends Fragment {
 
         return inflater.inflate(R.layout.info, container, false);
     }
+
+    public void finish() {
+        getActivity().finish();
+    }
 }

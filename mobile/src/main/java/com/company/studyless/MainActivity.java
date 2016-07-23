@@ -42,14 +42,12 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#CEFF1A", "#1B2D2A"};
     private RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17,
             G18, G19, G20;
-
     private TextView result1, result2, result3, result4, result5, result6, result7, result8,
             result9, result10, result11, result12, result13, result14, result15, result16,
             result17, result18, result19, result20, matrixText, volumecount;
-
-
     private EditText roomField;
     private DatabaseReference mDatabase;
     private matrix matrix = new matrix();
@@ -63,9 +61,7 @@ public class MainActivity extends AppCompatActivity
             9999, 9999, 9999, 9999, 9999
     };
     private LinearLayout questionsLayout;
-    private RelativeLayout loadingLayout;
-
-    String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#CEFF1A", "#1B2D2A"};
+    private RelativeLayout loadingLayout, infoLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,6 +316,8 @@ public class MainActivity extends AppCompatActivity
         matrixText = (TextView) findViewById(R.id.matrixText);
         //RoomTextView = (TextView) findViewById(R.id.RoomTextViex);
         volumecount = (TextView) findViewById(R.id.volumecount);
+        infoLayout = (RelativeLayout) findViewById(R.id.infoLayout);
+
 
     }
 
@@ -429,16 +427,17 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+
         Fragment fragment = null;
+        int id = item.getItemId();
         if (id == R.id.nav_questions) {
-            //questionsLayout.setVisibility(View.VISIBLE);
-            //
-            fragment = new question_list();
+            questionsLayout.setVisibility(View.VISIBLE);
+            fragment = new BlancFragment();
         } else if (id == R.id.nav_info) {
             fragment = new Info();
             questionsLayout.setVisibility(View.GONE);
@@ -461,6 +460,8 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_layout, fragment).commit();
+        } else {
+            this.getFragmentManager().popBackStack();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
