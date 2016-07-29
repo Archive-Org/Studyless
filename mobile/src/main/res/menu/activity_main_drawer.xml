@@ -19,7 +19,10 @@
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_info_black_24dp"
             android:title="@string/information" />
-
+        <item
+            android:id="@+id/nav_news"
+            android:icon="@drawable/ic_lightbulb_outline_black_24dp"
+            android:title="@string/news" />
     </group>
 
     <item android:title="@string/communicate">

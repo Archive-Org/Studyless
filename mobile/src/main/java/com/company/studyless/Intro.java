@@ -21,7 +21,6 @@ public class Intro extends AppIntro {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //Welcome have more free time… enjoy…
         addSlide(AppIntro2Fragment.newInstance(
                 getResources().getString(R.string.first_slide_title),

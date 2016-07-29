@@ -8,7 +8,6 @@
 
 package com.company.studyless;
 
-import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.Notification;
@@ -25,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.GravityCompat;
@@ -32,8 +32,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
-import android.transition.TransitionInflater;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,23 +45,29 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
+import java.util.HashMap;
 import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#CEFF1A", "#1B2D2A"};
+    String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#1B2D2A"};
+    FirebaseRemoteConfig mFirebaseRemoteConfig;
+    String newsTitle, newsBody;
     private RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17,
             G18, G19, G20;
     private TextView result1, result2, result3, result4, result5, result6, result7, result8,
             result9, result10, result11, result12, result13, result14, result15, result16,
-            result17, result18, result19, result20, matrixText, volumecount;
+            result17, result18, result19, result20, matrixText, volumecount, news_title, news_body;
     private EditText roomField;
     private DatabaseReference mDatabase;
     private matrix matrix = new matrix();
@@ -94,8 +98,6 @@ public class MainActivity extends AppCompatActivity
         }
         //Display activity main
         setContentView(R.layout.activity_main);
-        setupWindowAnimations();
-
 
         //TODO implement inflator
 
@@ -128,12 +130,16 @@ public class MainActivity extends AppCompatActivity
         //Bind views
         bindObjects();
 
+
         //Hide layout till db loaded
         questionsLayout.setVisibility(View.GONE);
         loadingLayout.setVisibility(View.VISIBLE);
         //Initialize database and Vibrations
         //RoomTextView.setText(String.valueOf(room));
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
         Vibrator vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         volumeHandler.setVibrator(vibratorService);
 
@@ -156,8 +162,10 @@ public class MainActivity extends AppCompatActivity
 
 
         //Fetch data
-        getDatabase();
+        getNews();
 
+
+        getDatabase();
     }
 
     //Handle all matrix buttons
@@ -243,12 +251,12 @@ public class MainActivity extends AppCompatActivity
 
     private void plusOneEntry(int row, int column) {
         int value = matrix.getData()[row][column] + 1;
-        mDatabase.child("room_" + room).child(row + "/" + column + "").setValue(value);
+        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "").setValue(value);
     }
 
     private void lessOneEntry(int row, int column) {
         int value = matrix.getData()[row][column] - 1;
-        mDatabase.child("room_" + room).child(row + "/" + column + "").setValue(value);
+        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "").setValue(value);
     }
 
     private void initializeRoom(int roomNumber) {
@@ -256,7 +264,7 @@ public class MainActivity extends AppCompatActivity
         int i = 0;
         while (e < matrix.questionsRows) {
             while (i < 4) {
-                mDatabase.child("room_" + roomNumber + "/" + e + "/" + i + "").setValue(0);
+                mDatabase.child("Rooms/" + "room_" + roomNumber + "/" + e + "/" + i + "").setValue(0);
                 i++;
             }
             i = 0;
@@ -335,6 +343,9 @@ public class MainActivity extends AppCompatActivity
         result19 = (TextView) findViewById(R.id.resultado19);
         result20 = (TextView) findViewById(R.id.resultado20);
 
+        news_title = (TextView) findViewById(R.id.news_title);
+        news_body = (TextView) findViewById(R.id.news_body);
+
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
         volumecount = (TextView) findViewById(R.id.volumecount);
@@ -342,11 +353,10 @@ public class MainActivity extends AppCompatActivity
         loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
 
 
-
     }
 
     private void getDatabase() {
-        mDatabase.child("room_" + room).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Rooms/room_" + room).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -377,15 +387,35 @@ public class MainActivity extends AppCompatActivity
                     result19.setText(betterMostVoted(18));
                     result20.setText(betterMostVoted(19));
 
+
                     loadingLayout.setVisibility(View.GONE);
                     questionsLayout.setVisibility(View.VISIBLE);
                     //showNotification();
+
 
                 } else {
                     clearSelection();
                     roomField.setHint(getString(R.string.Room_) + String.valueOf(room));
                     topButtonArray();
                     initializeRoom(room);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+    private void getNews() {
+        mDatabase.child("Data").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    HashMap d = (HashMap) dataSnapshot.getValue();
+                    newsBody = d.get("news_body").toString();
+                    newsTitle = d.get("news_title").toString();
                 }
             }
 
@@ -467,12 +497,27 @@ public class MainActivity extends AppCompatActivity
             fragment = new Info();
             questionsLayout.setVisibility(View.GONE);
             hidekb();
+        } else if (id == R.id.nav_news) {
+            fragment = new News();
+            mFirebaseRemoteConfig.fetch(3600) //Fetch every hour news
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                // Once the config is successfully fetched it must be activated before newly fetched
+                                // values are returned.
+                                mFirebaseRemoteConfig.activateFetched();
+                            }
+                        }
+                    });
+            questionsLayout.setVisibility(View.GONE);
+            hidekb();
         } else if (id == R.id.nav_share) {
 
             Intent sharingIntent = new Intent(Intent.ACTION_SEND)
                     .setType("text/plain")
                     .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.Share_subject))
-                    .putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_body));
+                    .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_body));
 
             startActivity(Intent.createChooser(sharingIntent, getString(R.string.Share_via)));
         }
@@ -571,11 +616,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setupWindowAnimations() {
-        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
-        getWindow().setExitTransition(slide);
-    }
 
     private void showNotification() {
 

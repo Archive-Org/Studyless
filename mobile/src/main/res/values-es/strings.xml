@@ -55,5 +55,6 @@
     <string name="what_body">Con Studyless quería desarrollar una antigua idea de comunicarse a través de código morse usando vibraciones, esta es una versión más amplia, una manera no intrusiva de comunicarse. Usted puede usarlo de la manera que le guste.</string>
     <string name="tips_body">Para conseguir una mejor experiencia debería desactivar la pantalla de bloqueo para poder utilizar la funcionalidad de vibraciones sin mirar a la pantalla ya que las vibraciones no funciona cuando el teléfono está bloqueado</string>
     <string name="forth_slide_description">Utiliza las teclas de volumen del teléfono para elegir la pregunta y el teléfono vibrará en base a la respuestas más votada</string>
+    <string name="news">Novedades</string>
 
 </resources>
