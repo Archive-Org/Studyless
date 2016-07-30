@@ -24,7 +24,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.GravityCompat;
@@ -38,15 +37,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,20 +54,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
-import java.util.HashMap;
 import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#1B2D2A"};
     FirebaseRemoteConfig mFirebaseRemoteConfig;
-    String newsTitle, newsBody;
+    LinearLayout questionsLayout;
+    Animation fadeIn;
+    Animation fadeOut;
     private RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17,
             G18, G19, G20;
     private TextView result1, result2, result3, result4, result5, result6, result7, result8,
             result9, result10, result11, result12, result13, result14, result15, result16,
-            result17, result18, result19, result20, matrixText, volumecount, news_title, news_body;
+            result17, result18, result19, result20, matrixText, volumecount;
     private EditText roomField;
     private DatabaseReference mDatabase;
     private matrix matrix = new matrix();
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999
     };
-    private RelativeLayout loadingLayout, infoLayout, questionsLayout;
+    private RelativeLayout loadingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,19 +96,30 @@ public class MainActivity extends AppCompatActivity
 
             startActivity(intent);
         }
+
+        fadeIn = AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_in);
+        fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
         //Display activity main
         setContentView(R.layout.activity_main);
 
-        //TODO implement inflator
+        //Bind views
+        bindObjects();
+//Hide layout show
+        loadingLayout.setVisibility(View.VISIBLE);
 
+        questionsLayout.setVisibility(View.GONE);
+
+
+
+        //TODO implement inflator
         /*FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, new question_list()).commit();
-*/
+                .replace(R.id.frame_layout, new question_list()).commit();*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         //Change colors and startup
+        String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#1B2D2A"};
         int randomColor = Color.parseColor(colorsArray[random.nextInt(colorsArray.length)]);
         int darkerColor = ColorUtils.blendARGB(randomColor, Color.BLACK, 0.2F);
         toolbar.setBackgroundColor(randomColor);
@@ -122,23 +133,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Bind views
-        bindObjects();
-
-
-        //Hide layout till db loaded
-        questionsLayout.setVisibility(View.GONE);
-        loadingLayout.setVisibility(View.VISIBLE);
         //Initialize database and Vibrations
-        //RoomTextView.setText(String.valueOf(room));
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
 
         Vibrator vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         volumeHandler.setVibrator(vibratorService);
@@ -162,9 +165,6 @@ public class MainActivity extends AppCompatActivity
 
 
         //Fetch data
-        getNews();
-
-
         getDatabase();
     }
 
@@ -343,13 +343,11 @@ public class MainActivity extends AppCompatActivity
         result19 = (TextView) findViewById(R.id.resultado19);
         result20 = (TextView) findViewById(R.id.resultado20);
 
-        news_title = (TextView) findViewById(R.id.news_title);
-        news_body = (TextView) findViewById(R.id.news_body);
 
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
         volumecount = (TextView) findViewById(R.id.volumecount);
-        questionsLayout = (RelativeLayout) findViewById(R.id.questionsLayoutRoot);
+        questionsLayout = (LinearLayout) findViewById(R.id.questionsLayout);
         loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
 
 
@@ -388,8 +386,7 @@ public class MainActivity extends AppCompatActivity
                     result20.setText(betterMostVoted(19));
 
 
-                    loadingLayout.setVisibility(View.GONE);
-                    questionsLayout.setVisibility(View.VISIBLE);
+                    showQuestionsHideLoading();
                     //showNotification();
 
 
@@ -405,25 +402,6 @@ public class MainActivity extends AppCompatActivity
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
-    }
-
-    private void getNews() {
-        mDatabase.child("Data").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    HashMap d = (HashMap) dataSnapshot.getValue();
-                    newsBody = d.get("news_body").toString();
-                    newsTitle = d.get("news_title").toString();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
 
     }
 
@@ -499,19 +477,9 @@ public class MainActivity extends AppCompatActivity
             hidekb();
         } else if (id == R.id.nav_news) {
             fragment = new News();
-            mFirebaseRemoteConfig.fetch(3600) //Fetch every hour news
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                // Once the config is successfully fetched it must be activated before newly fetched
-                                // values are returned.
-                                mFirebaseRemoteConfig.activateFetched();
-                            }
-                        }
-                    });
             questionsLayout.setVisibility(View.GONE);
             hidekb();
+
         } else if (id == R.id.nav_share) {
 
             Intent sharingIntent = new Intent(Intent.ACTION_SEND)
@@ -609,7 +577,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     String betterMostVoted(int row) {
-        if (matrix.MostVoted(row) == "?") {
+        if (matrix.MostVoted(row).equals("?")) {
             return getString(R.string.tie);
         } else {
             return matrix.MostVoted(row);
@@ -624,7 +592,7 @@ public class MainActivity extends AppCompatActivity
                 getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height),
                 true);
         Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 01, intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Notification.Builder builder = new Notification.Builder(getApplicationContext());
         builder.setContentTitle(mostVoted2String());
         builder.setContentText("By Studyless");
@@ -674,6 +642,26 @@ public class MainActivity extends AppCompatActivity
                 matrix.MostVoted(17) +
                 matrix.MostVoted(18) +
                 matrix.MostVoted(19);
+    }
+
+    private void showQuestionsHideLoading() {
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                loadingLayout.setVisibility(View.GONE);
+            }
+        });
+        loadingLayout.startAnimation(fadeOut);
+        questionsLayout.setVisibility(View.VISIBLE);
+        questionsLayout.startAnimation(fadeIn);
     }
 
 
