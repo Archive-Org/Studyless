@@ -61,26 +61,26 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     FirebaseRemoteConfig mFirebaseRemoteConfig;
     LinearLayout questionsLayout;
-    Animation fadeIn;
-    Animation fadeOut;
+    Animation fadeIn, fadeOut;
+    private RelativeLayout loadingLayout;
     private RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17,
             G18, G19, G20;
     private TextView result1, result2, result3, result4, result5, result6, result7, result8,
             result9, result10, result11, result12, result13, result14, result15, result16,
-            result17, result18, result19, result20, matrixText, volumecount;
+            result17, result18, result19, result20, matrixText, volumeCount;
     private EditText roomField;
     private DatabaseReference mDatabase;
     private matrix matrix = new matrix();
     private Random random = new Random();
     private VolumeHandler volumeHandler = new VolumeHandler();
     private int room = random.nextInt(100000);
+    private boolean showNotification, showMatrix;
     private int[] checkedButtons = {
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999,
-            9999, 9999, 9999, 9999, 9999
-    };
-    private RelativeLayout loadingLayout;
+            9999, 9999, 9999, 9999, 9999};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,10 +153,12 @@ public class MainActivity extends AppCompatActivity
             matrixText.setVisibility(View.GONE);
         }
         if (prefs.getBoolean("showVolume", false)) {
-            volumecount.setVisibility(View.VISIBLE);
+            volumeCount.setVisibility(View.VISIBLE);
         } else {
-            volumecount.setVisibility(View.GONE);
+            volumeCount.setVisibility(View.GONE);
         }
+        showNotification = prefs.getBoolean("showNotification", false);
+        showMatrix = prefs.getBoolean("showMatrix", false);
 
 
         getWindow().setSoftInputMode(
@@ -170,7 +172,7 @@ public class MainActivity extends AppCompatActivity
 
     //Handle all matrix buttons
     public void buttonClickListener(View v) {
-        hidekb();
+        hideKB();
         //Split buttons tags
         String tag = (String) v.getTag();
         String[] parts = tag.split(",");
@@ -260,17 +262,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initializeRoom(int roomNumber) {
-        int e = 0;
-        int i = 0;
-        while (e < matrix.questionsRows) {
-            while (i < 4) {
-                mDatabase.child("Rooms/" + "room_" + roomNumber + "/" + e + "/" + i + "").setValue(0);
-                i++;
-            }
-            i = 0;
-            e++;
-
-        }
+        new InitializeRoomThread().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, roomNumber);
     }
 
     public void changeRoom(View v) {
@@ -289,7 +281,7 @@ public class MainActivity extends AppCompatActivity
                 loadingLayout.setVisibility(View.VISIBLE);
                 questionsLayout.setVisibility(View.GONE);
                 topButtonArray();
-                hidekb();
+                hideKB();
                 getDatabase();
             }
         }
@@ -346,7 +338,7 @@ public class MainActivity extends AppCompatActivity
 
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
-        volumecount = (TextView) findViewById(R.id.volumecount);
+        volumeCount = (TextView) findViewById(R.id.volumecount);
         questionsLayout = (LinearLayout) findViewById(R.id.questionsLayout);
         loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
 
@@ -360,9 +352,10 @@ public class MainActivity extends AppCompatActivity
                 if (dataSnapshot.exists()) {
                     matrix.SyncWDB(dataSnapshot.getValue());
 
-                    matrixText.setText(matrix.matrix2string(matrix.getData(),
-                            matrix.questionsRows,
-                            4));
+                    if (showMatrix) {
+                        matrixText.setText(matrix.matrix2string(matrix.getData(),
+                                matrix.questionsRows, 4));
+                    }
 
                     result1.setText(betterMostVoted(0));
                     result2.setText(betterMostVoted(1));
@@ -385,9 +378,12 @@ public class MainActivity extends AppCompatActivity
                     result19.setText(betterMostVoted(18));
                     result20.setText(betterMostVoted(19));
 
-
-                    showQuestionsHideLoading();
-                    //showNotification();
+                    if (loadingLayout.getVisibility() != View.GONE) {
+                        showQuestionsHideLoading();
+                    }
+                    if (showNotification) {
+                        showNotification();
+                    }
 
 
                 } else {
@@ -474,11 +470,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_info) {
             fragment = new Info();
             questionsLayout.setVisibility(View.GONE);
-            hidekb();
+            hideKB();
         } else if (id == R.id.nav_news) {
             fragment = new News();
             questionsLayout.setVisibility(View.GONE);
-            hidekb();
+            hideKB();
 
         } else if (id == R.id.nav_share) {
 
@@ -488,7 +484,12 @@ public class MainActivity extends AppCompatActivity
                     .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_body));
 
             startActivity(Intent.createChooser(sharingIntent, getString(R.string.Share_via)));
+        } else if (id == R.id.nav_chat) {
+            fragment = new Chat();
+            questionsLayout.setVisibility(View.GONE);
+            hideKB();
         }
+
 
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
@@ -516,12 +517,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            volumecount.setText(String.valueOf(volumeHandler.handleVolume(1)));
+            volumeCount.setText(String.valueOf(volumeHandler.handleVolume(1)));
             triggerThread();
             return true;
         }
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            volumecount.setText(String.valueOf(volumeHandler.handleVolume(5)));
+            volumeCount.setText(String.valueOf(volumeHandler.handleVolume(5)));
             triggerThread();
 
             return true;
@@ -532,7 +533,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            //volumecount.setText(String.valueOf(volumeHandler.handleVolume(4)));
+            //volumeCount.setText(String.valueOf(volumeHandler.handleVolume(4)));
             //triggerThread();
 
             return true;
@@ -613,12 +614,16 @@ public class MainActivity extends AppCompatActivity
         notificationManger.notify(01, notification);
     }
 
-    private void hidekb() {
+    private void hideKB() {
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                InputMethodManager.HIDE_NOT_ALWAYS);
+        try {
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private String mostVoted2String() {
@@ -664,5 +669,8 @@ public class MainActivity extends AppCompatActivity
         questionsLayout.startAnimation(fadeIn);
     }
 
+    public void colorizeMostVoted(int row) {
+
+    }
 
 }

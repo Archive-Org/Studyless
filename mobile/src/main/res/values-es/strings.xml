@@ -56,5 +56,7 @@
     <string name="tips_body">Para conseguir una mejor experiencia debería desactivar la pantalla de bloqueo para poder utilizar la funcionalidad de vibraciones sin mirar a la pantalla ya que las vibraciones no funciona cuando el teléfono está bloqueado</string>
     <string name="forth_slide_description">Utiliza las teclas de volumen del teléfono para elegir la pregunta y el teléfono vibrará en base a la respuestas más votada</string>
     <string name="news">Novedades</string>
+    <string name="chat">Chat</string>
+    <string name="show_notification">Mostrar Notificacion</string>
 
 </resources>

@@ -63,4 +63,6 @@
     <string name="Share_subject">Studyless</string>
     <string name="by_studyless">By Studyless</string>
     <string name="news">News</string>
+    <string name="show_notification">Show notification</string>
+    <string name="chat">Chat</string>
 </resources>

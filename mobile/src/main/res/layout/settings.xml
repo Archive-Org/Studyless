@@ -69,6 +69,28 @@
                     android:onClick="showVolumeListener" />
 
             </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/show_notification"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <CheckBox
+                    android:id="@+id/showNotificationCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:checked="false"
+                    android:onClick="showNotificationListener" />
+
+            </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 

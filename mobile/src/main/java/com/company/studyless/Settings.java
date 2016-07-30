@@ -17,9 +17,9 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class Settings extends Activity {
-    CheckBox showMatrixCB, showVolumeCB;
+    CheckBox showMatrixCB, showVolumeCB, showNotificationCB;
     TextView matrixText;
-    boolean showMatrix, showVolume;
+    boolean showMatrix, showVolume, showNotification;
     SharedPreferences prefs;
 
 
@@ -31,6 +31,7 @@ public class Settings extends Activity {
         setContentView(R.layout.settings);
         showMatrixCB = (CheckBox) findViewById(R.id.showMatrixCheckBox);
         showVolumeCB = (CheckBox) findViewById(R.id.showVolumeCheckBox);
+        showNotificationCB = (CheckBox) findViewById(R.id.showNotificationCheckBox);
         matrixText = (TextView) findViewById(R.id.matrixText);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -43,6 +44,9 @@ public class Settings extends Activity {
         }
         if (showVolume) {
             showVolumeCB.toggle();
+        }
+        if (showNotification) {
+            showNotificationCB.toggle();
         }
     }
 
@@ -67,6 +71,18 @@ public class Settings extends Activity {
         } else {
             SharedPreferences.Editor edit = prefs.edit();
             edit.putBoolean("showVolume", Boolean.FALSE);
+            edit.apply();
+        }
+    }
+
+    public void showNotificationListener(View v) {
+        if (!showNotification) {
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putBoolean("showNotification", Boolean.TRUE);
+            edit.apply();
+        } else {
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putBoolean("showNotification", Boolean.FALSE);
             edit.apply();
         }
     }
