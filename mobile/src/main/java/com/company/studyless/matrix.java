@@ -10,7 +10,7 @@ package com.company.studyless;
 
 import java.util.ArrayList;
 
-class matrix {
+class Matrix {
     int questionsRows = 20;
     private int[][] Data = new int[questionsRows][4];
 
@@ -35,7 +35,7 @@ class matrix {
                 e++;
             }
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Exception parsing matrix");
+            System.out.println("Exception parsing Matrix");
         }
     }
 

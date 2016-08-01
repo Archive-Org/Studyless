@@ -10,14 +10,14 @@ package com.company.studyless;
 
 
 class VolumeThreadObject {
-    private matrix Matrix;
+    private com.company.studyless.Matrix Matrix;
     private VolumeHandler vh;
 
-    matrix getMatrix() {
+    com.company.studyless.Matrix getMatrix() {
         return Matrix;
     }
 
-    void setMatrix(matrix mtrx) {
+    void setMatrix(com.company.studyless.Matrix mtrx) {
         Matrix = mtrx;
     }
 

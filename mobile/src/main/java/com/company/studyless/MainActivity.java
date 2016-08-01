@@ -54,23 +54,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
+import java.lang.reflect.Field;
 import java.util.Random;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    FirebaseRemoteConfig mFirebaseRemoteConfig;
-    LinearLayout questionsLayout;
-    Animation fadeIn, fadeOut;
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private LinearLayout questionsLayout;
+    private Animation fadeIn, fadeOut;
     private RelativeLayout loadingLayout;
-    private RadioGroup G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G16, G17,
-            G18, G19, G20;
-    private TextView result1, result2, result3, result4, result5, result6, result7, result8,
-            result9, result10, result11, result12, result13, result14, result15, result16,
-            result17, result18, result19, result20, matrixText, volumeCount;
+
+    private Matrix Matrix = new Matrix();
+    private RadioGroup[] G = new RadioGroup[Matrix.questionsRows];
+    private TextView[] result = new TextView[Matrix.questionsRows];
+    private TextView matrixText, volumeCount;
     private EditText roomField;
     private DatabaseReference mDatabase;
-    private matrix matrix = new matrix();
+
     private Random random = new Random();
     private VolumeHandler volumeHandler = new VolumeHandler();
     private int room = random.nextInt(100000);
@@ -80,12 +80,23 @@ public class MainActivity extends AppCompatActivity
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999};
+    private int[] especialRooms = {1337, 2512, 1, 1234, 1000000};
 
+    static int getResId(String resName) {
+
+        try {
+            Field idField = R.id.class.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //Intro if 1st time app start
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean previouslyStarted = prefs.getBoolean("Previously started", false);
@@ -104,17 +115,15 @@ public class MainActivity extends AppCompatActivity
 
         //Bind views
         bindObjects();
-//Hide layout show
+        //Hide layout show
         loadingLayout.setVisibility(View.VISIBLE);
-
         questionsLayout.setVisibility(View.GONE);
 
 
-
-        //TODO implement inflator
+        //TODO implement inflater
         /*FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, new question_list()).commit();*/
+                .replace(R.id.frame_layout, new Question_list()).commit();*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -141,8 +150,6 @@ public class MainActivity extends AppCompatActivity
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
-
         Vibrator vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         volumeHandler.setVibrator(vibratorService);
 
@@ -170,7 +177,7 @@ public class MainActivity extends AppCompatActivity
         getDatabase();
     }
 
-    //Handle all matrix buttons
+    //Handle all Matrix buttons
     public void buttonClickListener(View v) {
         hideKB();
         //Split buttons tags
@@ -180,71 +187,7 @@ public class MainActivity extends AppCompatActivity
         int column = Integer.parseInt(parts[1]);
 
         if (isChecked(row, column)) {
-            switch (row) {
-                case 0:
-                    G1.clearCheck();
-                    break;
-                case 1:
-                    G2.clearCheck();
-                    break;
-                case 2:
-                    G3.clearCheck();
-                    break;
-                case 3:
-                    G4.clearCheck();
-                    break;
-                case 4:
-                    G5.clearCheck();
-                    break;
-                case 5:
-                    G6.clearCheck();
-                    break;
-                case 6:
-                    G7.clearCheck();
-                    break;
-                case 7:
-                    G8.clearCheck();
-                    break;
-                case 8:
-                    G9.clearCheck();
-                    break;
-                case 9:
-                    G10.clearCheck();
-                    break;
-                case 10:
-                    G11.clearCheck();
-                    break;
-                case 11:
-                    G12.clearCheck();
-                    break;
-                case 12:
-                    G13.clearCheck();
-                    break;
-                case 13:
-                    G14.clearCheck();
-                    break;
-                case 14:
-                    G15.clearCheck();
-                    break;
-                case 15:
-                    G16.clearCheck();
-                    break;
-                case 16:
-                    G17.clearCheck();
-                    break;
-                case 17:
-                    G18.clearCheck();
-                    break;
-                case 18:
-                    G19.clearCheck();
-                    break;
-                case 19:
-                    G20.clearCheck();
-                    break;
-                default:
-                    break;
-
-            }
+            G[row].clearCheck();
             lessOneEntry(row, column);
         } else {
             plusOneEntry(row, column);
@@ -252,13 +195,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void plusOneEntry(int row, int column) {
-        int value = matrix.getData()[row][column] + 1;
-        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "").setValue(value);
+        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "").setValue(Matrix.getData()[row][column] + 1);
     }
 
     private void lessOneEntry(int row, int column) {
-        int value = matrix.getData()[row][column] - 1;
-        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "").setValue(value);
+        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "").setValue(Matrix.getData()[row][column] - 1);
     }
 
     private void initializeRoom(int roomNumber) {
@@ -275,6 +216,29 @@ public class MainActivity extends AppCompatActivity
                         Toast.LENGTH_SHORT).show();
 
             } else {
+                if (checkSpecialRoom(n)) {
+                    Fragment fragment = null;
+                    switch (n) {
+                        case 1337:
+                            fragment = new Leet();
+                            break;
+                        case 1:
+                            break;
+                        case 2512:
+                            break;
+                        case 1000000:
+                            break;
+
+                    }
+
+                    if (fragment != null) {
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame_layout, fragment).commit();
+                    } else {
+                        this.getFragmentManager().popBackStack();
+                    }
+                }
                 room = n;
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 clearSelection();
@@ -284,6 +248,7 @@ public class MainActivity extends AppCompatActivity
                 hideKB();
                 getDatabase();
             }
+
         }
 
         roomField.setText("");
@@ -291,49 +256,60 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void bindObjects() {
-        //Better way to this ugly stuff?
-        G1 = (RadioGroup) findViewById(R.id.radioGroup1);
-        G2 = (RadioGroup) findViewById(R.id.radioGroup2);
-        G3 = (RadioGroup) findViewById(R.id.radioGroup3);
-        G4 = (RadioGroup) findViewById(R.id.radioGroup4);
-        G5 = (RadioGroup) findViewById(R.id.radioGroup5);
-        G6 = (RadioGroup) findViewById(R.id.radioGroup6);
-        G7 = (RadioGroup) findViewById(R.id.radioGroup7);
-        G8 = (RadioGroup) findViewById(R.id.radioGroup8);
-        G9 = (RadioGroup) findViewById(R.id.radioGroup9);
-        G10 = (RadioGroup) findViewById(R.id.radioGroup10);
-        G11 = (RadioGroup) findViewById(R.id.radioGroup11);
-        G12 = (RadioGroup) findViewById(R.id.radioGroup12);
-        G13 = (RadioGroup) findViewById(R.id.radioGroup13);
-        G14 = (RadioGroup) findViewById(R.id.radioGroup14);
-        G15 = (RadioGroup) findViewById(R.id.radioGroup15);
-        G16 = (RadioGroup) findViewById(R.id.radioGroup16);
-        G17 = (RadioGroup) findViewById(R.id.radioGroup17);
-        G18 = (RadioGroup) findViewById(R.id.radioGroup18);
-        G19 = (RadioGroup) findViewById(R.id.radioGroup19);
-        G20 = (RadioGroup) findViewById(R.id.radioGroup20);
+    //@org.jetbrains.annotations.Contract(pure = true)
+    private boolean checkSpecialRoom(int n) {
+        for (int c : especialRooms) {
+            if (c == n) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-        result1 = (TextView) findViewById(R.id.resultado1);
-        result2 = (TextView) findViewById(R.id.resultado2);
-        result3 = (TextView) findViewById(R.id.resultado3);
-        result4 = (TextView) findViewById(R.id.resultado4);
-        result5 = (TextView) findViewById(R.id.resultado5);
-        result6 = (TextView) findViewById(R.id.resultado6);
-        result7 = (TextView) findViewById(R.id.resultado7);
-        result8 = (TextView) findViewById(R.id.resultado8);
-        result9 = (TextView) findViewById(R.id.resultado9);
-        result10 = (TextView) findViewById(R.id.resultado10);
-        result11 = (TextView) findViewById(R.id.resultado11);
-        result12 = (TextView) findViewById(R.id.resultado12);
-        result13 = (TextView) findViewById(R.id.resultado13);
-        result14 = (TextView) findViewById(R.id.resultado14);
-        result15 = (TextView) findViewById(R.id.resultado15);
-        result16 = (TextView) findViewById(R.id.resultado16);
-        result17 = (TextView) findViewById(R.id.resultado17);
-        result18 = (TextView) findViewById(R.id.resultado18);
-        result19 = (TextView) findViewById(R.id.resultado19);
-        result20 = (TextView) findViewById(R.id.resultado20);
+    private void bindObjects() {
+        //TODO use getResId (faster)
+        //Better way to this ugly stuff?
+        G[0] = (RadioGroup) findViewById(R.id.radioGroup1);
+        G[1] = (RadioGroup) findViewById(R.id.radioGroup2);
+        G[2] = (RadioGroup) findViewById(R.id.radioGroup3);
+        G[3] = (RadioGroup) findViewById(R.id.radioGroup4);
+        G[4] = (RadioGroup) findViewById(R.id.radioGroup5);
+        G[5] = (RadioGroup) findViewById(R.id.radioGroup6);
+        G[6] = (RadioGroup) findViewById(R.id.radioGroup7);
+        G[7] = (RadioGroup) findViewById(R.id.radioGroup8);
+        G[8] = (RadioGroup) findViewById(R.id.radioGroup9);
+        G[9] = (RadioGroup) findViewById(R.id.radioGroup10);
+        G[10] = (RadioGroup) findViewById(R.id.radioGroup11);
+        G[11] = (RadioGroup) findViewById(R.id.radioGroup12);
+        G[12] = (RadioGroup) findViewById(R.id.radioGroup13);
+        G[13] = (RadioGroup) findViewById(R.id.radioGroup14);
+        G[14] = (RadioGroup) findViewById(R.id.radioGroup15);
+        G[15] = (RadioGroup) findViewById(R.id.radioGroup16);
+        G[16] = (RadioGroup) findViewById(R.id.radioGroup17);
+        G[17] = (RadioGroup) findViewById(R.id.radioGroup18);
+        G[18] = (RadioGroup) findViewById(R.id.radioGroup19);
+        G[19] = (RadioGroup) findViewById(R.id.radioGroup20);
+
+        result[0] = (TextView) findViewById(R.id.resultado1);
+        result[1] = (TextView) findViewById(R.id.resultado2);
+        result[2] = (TextView) findViewById(R.id.resultado3);
+        result[3] = (TextView) findViewById(R.id.resultado4);
+        result[4] = (TextView) findViewById(R.id.resultado5);
+        result[5] = (TextView) findViewById(R.id.resultado6);
+        result[6] = (TextView) findViewById(R.id.resultado7);
+        result[7] = (TextView) findViewById(R.id.resultado8);
+        result[8] = (TextView) findViewById(R.id.resultado9);
+        result[9] = (TextView) findViewById(R.id.resultado10);
+        result[10] = (TextView) findViewById(R.id.resultado11);
+        result[11] = (TextView) findViewById(R.id.resultado12);
+        result[12] = (TextView) findViewById(R.id.resultado13);
+        result[13] = (TextView) findViewById(R.id.resultado14);
+        result[14] = (TextView) findViewById(R.id.resultado15);
+        result[15] = (TextView) findViewById(R.id.resultado16);
+        result[16] = (TextView) findViewById(R.id.resultado17);
+        result[17] = (TextView) findViewById(R.id.resultado18);
+        result[18] = (TextView) findViewById(R.id.resultado19);
+        result[19] = (TextView) findViewById(R.id.resultado20);
 
 
         roomField = (EditText) findViewById(R.id.roomField);
@@ -341,8 +317,6 @@ public class MainActivity extends AppCompatActivity
         volumeCount = (TextView) findViewById(R.id.volumecount);
         questionsLayout = (LinearLayout) findViewById(R.id.questionsLayout);
         loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
-
-
     }
 
     private void getDatabase() {
@@ -350,33 +324,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    matrix.SyncWDB(dataSnapshot.getValue());
+                    Matrix.SyncWDB(dataSnapshot.getValue());
 
                     if (showMatrix) {
-                        matrixText.setText(matrix.matrix2string(matrix.getData(),
-                                matrix.questionsRows, 4));
+                        matrixText.setText(Matrix.matrix2string(Matrix.getData(),
+                                Matrix.questionsRows, 4));
                     }
-
-                    result1.setText(betterMostVoted(0));
-                    result2.setText(betterMostVoted(1));
-                    result3.setText(betterMostVoted(2));
-                    result4.setText(betterMostVoted(3));
-                    result5.setText(betterMostVoted(4));
-                    result6.setText(betterMostVoted(5));
-                    result7.setText(betterMostVoted(6));
-                    result8.setText(betterMostVoted(7));
-                    result9.setText(betterMostVoted(8));
-                    result10.setText(betterMostVoted(9));
-                    result11.setText(betterMostVoted(10));
-                    result12.setText(betterMostVoted(11));
-                    result13.setText(betterMostVoted(12));
-                    result14.setText(betterMostVoted(13));
-                    result15.setText(betterMostVoted(14));
-                    result16.setText(betterMostVoted(15));
-                    result17.setText(betterMostVoted(16));
-                    result18.setText(betterMostVoted(17));
-                    result19.setText(betterMostVoted(18));
-                    result20.setText(betterMostVoted(19));
+                    int i = 0;
+                    while (i < result.length) {
+                        result[i].setText(betterMostVoted(i));
+                        i++;
+                    }
 
                     if (loadingLayout.getVisibility() != View.GONE) {
                         showQuestionsHideLoading();
@@ -413,7 +371,6 @@ public class MainActivity extends AppCompatActivity
             return false;
         }
     }
-
 
     @Override
     public void onBackPressed() {
@@ -455,7 +412,6 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -541,50 +497,36 @@ public class MainActivity extends AppCompatActivity
         return super.onKeyLongPress(keyCode, event);
     }
 
-
     private void topButtonArray() {
         checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
                 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
     }
 
     private void clearSelection() {
-        G1.clearCheck();
-        G2.clearCheck();
-        G3.clearCheck();
-        G4.clearCheck();
-        G5.clearCheck();
-        G6.clearCheck();
-        G7.clearCheck();
-        G8.clearCheck();
-        G9.clearCheck();
-        G10.clearCheck();
-        G11.clearCheck();
-        G12.clearCheck();
-        G13.clearCheck();
-        G14.clearCheck();
-        G15.clearCheck();
-        G16.clearCheck();
-        G17.clearCheck();
-        G18.clearCheck();
-        G19.clearCheck();
-        G20.clearCheck();
+        for (RadioGroup g : G) {
+            g.clearCheck();
+        }
+        /*int i = 0;
+        while (i < G.length){
+            G[i].clearCheck();
+            i++;
+        }*/
     }
 
     private void triggerThread() {
         VolumeThreadObject data = new VolumeThreadObject();
         data.setVh(volumeHandler);
-        data.setMatrix(matrix);
+        data.setMatrix(Matrix);
         new VolumeCheckerThread().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
     }
 
     String betterMostVoted(int row) {
-        if (matrix.MostVoted(row).equals("?")) {
+        if (Matrix.MostVoted(row).equals("?")) {
             return getString(R.string.tie);
         } else {
-            return matrix.MostVoted(row);
+            return Matrix.MostVoted(row);
         }
     }
-
 
     private void showNotification() {
 
@@ -611,7 +553,7 @@ public class MainActivity extends AppCompatActivity
         Notification notification = builder.build();
         NotificationManager notificationManger =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManger.notify(01, notification);
+        notificationManger.notify(1, notification);
     }
 
     private void hideKB() {
@@ -627,26 +569,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     private String mostVoted2String() {
-        return matrix.MostVoted(0) +
-                matrix.MostVoted(1) +
-                matrix.MostVoted(2) +
-                matrix.MostVoted(3) +
-                matrix.MostVoted(4) +
-                matrix.MostVoted(5) +
-                matrix.MostVoted(6) +
-                matrix.MostVoted(7) +
-                matrix.MostVoted(8) +
-                matrix.MostVoted(9) +
-                matrix.MostVoted(10) +
-                matrix.MostVoted(11) +
-                matrix.MostVoted(12) +
-                matrix.MostVoted(13) +
-                matrix.MostVoted(14) +
-                matrix.MostVoted(15) +
-                matrix.MostVoted(16) +
-                matrix.MostVoted(17) +
-                matrix.MostVoted(18) +
-                matrix.MostVoted(19);
+        return Matrix.MostVoted(0) +
+                Matrix.MostVoted(1) +
+                Matrix.MostVoted(2) +
+                Matrix.MostVoted(3) +
+                Matrix.MostVoted(4) +
+                Matrix.MostVoted(5) +
+                Matrix.MostVoted(6) +
+                Matrix.MostVoted(7) +
+                Matrix.MostVoted(8) +
+                Matrix.MostVoted(9) +
+                Matrix.MostVoted(10) +
+                Matrix.MostVoted(11) +
+                Matrix.MostVoted(12) +
+                Matrix.MostVoted(13) +
+                Matrix.MostVoted(14) +
+                Matrix.MostVoted(15) +
+                Matrix.MostVoted(16) +
+                Matrix.MostVoted(17) +
+                Matrix.MostVoted(18) +
+                Matrix.MostVoted(19);
     }
 
     private void showQuestionsHideLoading() {
@@ -667,10 +609,6 @@ public class MainActivity extends AppCompatActivity
         loadingLayout.startAnimation(fadeOut);
         questionsLayout.setVisibility(View.VISIBLE);
         questionsLayout.startAnimation(fadeIn);
-    }
-
-    public void colorizeMostVoted(int row) {
-
     }
 
 }

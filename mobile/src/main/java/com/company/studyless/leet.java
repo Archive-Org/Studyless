@@ -15,13 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by mac on 19/7/16.
- */
-public class Question_list extends Fragment {
+public class Leet extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.questions_list, container, false);
+
+        return inflater.inflate(R.layout.leet, container, false);
     }
 }
