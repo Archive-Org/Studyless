@@ -19,6 +19,10 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,9 +62,10 @@ import java.lang.reflect.Field;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
+
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
-    private LinearLayout questionsLayout;
+    private LinearLayout questionsLayout, blackScreen;
     private Animation fadeIn, fadeOut;
     private RelativeLayout loadingLayout;
 
@@ -75,12 +80,15 @@ public class MainActivity extends AppCompatActivity
     private VolumeHandler volumeHandler = new VolumeHandler();
     private int room = random.nextInt(100000);
     private boolean showNotification, showMatrix;
+    private boolean otherFragment = false;
     private int[] checkedButtons = {
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999};
     private int[] especialRooms = {1337, 2512, 1, 1234, 1000000};
+    private SensorManager mSensorManager;
+    private Sensor mProximity;
 
     static int getResId(String resName) {
 
@@ -114,10 +122,17 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         //Bind views
-        bindObjects();
-        //Hide layout show
+        loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
         loadingLayout.setVisibility(View.VISIBLE);
+        bindObjects();
+
+        //Hide layout show
         questionsLayout.setVisibility(View.GONE);
+        blackScreen.setVisibility(View.GONE);
+
+        //Sensors
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
 
         //TODO implement inflater
@@ -128,7 +143,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         //Change colors and startup
-        String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043", "#AAA95A", "#414066", "#1B2D2A"};
+        String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043",
+                "#AAA95A", "#414066", "#1B2D2A"};
         int randomColor = Color.parseColor(colorsArray[random.nextInt(colorsArray.length)]);
         int darkerColor = ColorUtils.blendARGB(randomColor, Color.BLACK, 0.2F);
         toolbar.setBackgroundColor(randomColor);
@@ -177,6 +193,18 @@ public class MainActivity extends AppCompatActivity
         getDatabase();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
+
     //Handle all Matrix buttons
     public void buttonClickListener(View v) {
         hideKB();
@@ -195,11 +223,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void plusOneEntry(int row, int column) {
-        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "").setValue(Matrix.getData()[row][column] + 1);
+        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "")
+                .setValue(Matrix.getData()[row][column] + 1);
     }
 
     private void lessOneEntry(int row, int column) {
-        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "").setValue(Matrix.getData()[row][column] - 1);
+        mDatabase.child("Rooms/room_" + room).child(row + "/" + column + "")
+                .setValue(Matrix.getData()[row][column] - 1);
     }
 
     private void initializeRoom(int roomNumber) {
@@ -238,15 +268,17 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         this.getFragmentManager().popBackStack();
                     }
+                } else {
+
+                    room = n;
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    clearSelection();
+                    loadingLayout.setVisibility(View.VISIBLE);
+                    getDatabase();
                 }
-                room = n;
-                mDatabase = FirebaseDatabase.getInstance().getReference();
-                clearSelection();
-                loadingLayout.setVisibility(View.VISIBLE);
                 questionsLayout.setVisibility(View.GONE);
                 topButtonArray();
                 hideKB();
-                getDatabase();
             }
 
         }
@@ -311,12 +343,12 @@ public class MainActivity extends AppCompatActivity
         result[18] = (TextView) findViewById(R.id.resultado19);
         result[19] = (TextView) findViewById(R.id.resultado20);
 
-
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
         volumeCount = (TextView) findViewById(R.id.volumecount);
         questionsLayout = (LinearLayout) findViewById(R.id.questionsLayout);
-        loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
+        blackScreen = (LinearLayout) findViewById(R.id.blackScreen);
+
     }
 
     private void getDatabase() {
@@ -421,14 +453,17 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         int id = item.getItemId();
         if (id == R.id.nav_questions) {
+            otherFragment = false;
             questionsLayout.setVisibility(View.VISIBLE);
             fragment = new BlancFragment();
         } else if (id == R.id.nav_info) {
+            otherFragment = true;
             fragment = new Info();
             questionsLayout.setVisibility(View.GONE);
             hideKB();
         } else if (id == R.id.nav_news) {
             fragment = new News();
+            otherFragment = true;
             questionsLayout.setVisibility(View.GONE);
             hideKB();
 
@@ -442,6 +477,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(Intent.createChooser(sharingIntent, getString(R.string.Share_via)));
         } else if (id == R.id.nav_chat) {
             fragment = new Chat();
+            otherFragment = true;
             questionsLayout.setVisibility(View.GONE);
             hideKB();
         }
@@ -506,11 +542,6 @@ public class MainActivity extends AppCompatActivity
         for (RadioGroup g : G) {
             g.clearCheck();
         }
-        /*int i = 0;
-        while (i < G.length){
-            G[i].clearCheck();
-            i++;
-        }*/
     }
 
     private void triggerThread() {
@@ -530,12 +561,15 @@ public class MainActivity extends AppCompatActivity
 
     private void showNotification() {
 
-        Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher),
+        Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
+                R.mipmap.ic_launcher),
                 getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width),
-                getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height),
+                getResources()
+                        .getDimensionPixelSize(android.R.dimen.notification_large_icon_height),
                 true);
         Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent,
+                Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Notification.Builder builder = new Notification.Builder(getApplicationContext());
         builder.setContentTitle(mostVoted2String());
         builder.setContentText("By Studyless");
@@ -611,4 +645,24 @@ public class MainActivity extends AppCompatActivity
         questionsLayout.startAnimation(fadeIn);
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            if (questionsLayout.getVisibility() == View.VISIBLE) {
+                if (event.values[0] == 0) { //if (event.sensor.getType() == Sensor.TYPE_PROXIMITY)
+                    blackScreen.setVisibility(View.VISIBLE);
+                    questionsLayout.setVisibility(View.GONE);
+                }
+            } else {
+                blackScreen.setVisibility(View.GONE);
+                if (loadingLayout.getVisibility() != View.VISIBLE && !otherFragment)//If not loading
+                    questionsLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }

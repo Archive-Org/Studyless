@@ -23,4 +23,6 @@
     tools:showIn="@layout/app_bar_main">
 
     <include layout="@layout/questions_view"/>
+
+    <include layout="@layout/black_screen" />
 </FrameLayout>
