@@ -6,13 +6,15 @@
  *
  */
 
-package com.company.studyless;
+package com.company.studyless.Views;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.company.studyless.MainActivity;
+import com.company.studyless.R;
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntro2Fragment;
 

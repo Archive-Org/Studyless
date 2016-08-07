@@ -6,7 +6,7 @@
  *
  */
 
-package com.company.studyless;
+package com.company.studyless.fragments;
 
 
 import android.app.Fragment;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.company.studyless.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;

@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 
 class VolumeCheckerThread extends AsyncTask<VolumeThreadObject, Void, Void> {
     private Long thisWorker = 0L;
-    private boolean crash = false;
 
     @Override
     protected Void doInBackground(final VolumeThreadObject... params) {
@@ -24,14 +23,12 @@ class VolumeCheckerThread extends AsyncTask<VolumeThreadObject, Void, Void> {
             vh.setLastWorker(thisWorker);
 
             Thread.sleep(vh.delay);
-            if (thisWorker != vh.lastWorker) {
-                crash = true;
-            }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        if (vh.lastWorker.equals(thisWorker) && !crash) {
+        if (vh.lastWorker.equals(thisWorker)) {
             int vibrations;
             switch (params[0].getMatrix().MostVoted(vh.volumePressedCount - 1)) {
                 case "A":

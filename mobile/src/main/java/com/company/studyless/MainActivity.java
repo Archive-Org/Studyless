@@ -23,9 +23,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -51,12 +54,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.company.studyless.Views.Intro;
+import com.company.studyless.Views.Settings;
+import com.company.studyless.fragments.BlancFragment;
+import com.company.studyless.fragments.Chat;
+import com.company.studyless.fragments.Info;
+import com.company.studyless.fragments.Leet;
+import com.company.studyless.fragments.News;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
+import org.jetbrains.annotations.Contract;
 
 import java.lang.reflect.Field;
 import java.util.Random;
@@ -68,14 +80,12 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout questionsLayout, blackScreen;
     private Animation fadeIn, fadeOut;
     private RelativeLayout loadingLayout;
-
     private Matrix Matrix = new Matrix();
     private RadioGroup[] G = new RadioGroup[Matrix.questionsRows];
     private TextView[] result = new TextView[Matrix.questionsRows];
     private TextView matrixText, volumeCount;
     private EditText roomField;
     private DatabaseReference mDatabase;
-
     private Random random = new Random();
     private VolumeHandler volumeHandler = new VolumeHandler();
     private int room = random.nextInt(100000);
@@ -89,9 +99,14 @@ public class MainActivity extends AppCompatActivity
     private int[] especialRooms = {1337, 2512, 1, 1234, 1000000};
     private SensorManager mSensorManager;
     private Sensor mProximity;
+    private PowerManager.WakeLock wakeLock;
+    private boolean currentFocus;
+    private boolean isPaused;
+    private Handler collapseNotificationHandler;
+    private int lastRingMode;
+    private AudioManager AudioManager;
 
-    static int getResId(String resName) {
-
+    private int getResId(String resName) {
         try {
             Field idField = R.id.class.getDeclaredField(resName);
             return idField.getInt(idField);
@@ -99,7 +114,6 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
             return -1;
         }
-
     }
 
     @Override
@@ -134,6 +148,11 @@ public class MainActivity extends AppCompatActivity
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
+        //Prevent lock
+        PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
+        wakeLock.acquire();
+
 
         //TODO implement inflater
         /*FragmentManager fragmentManager = getFragmentManager();
@@ -157,17 +176,23 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //Initialize database and Vibrations
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         Vibrator vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         volumeHandler.setVibrator(vibratorService);
+        //Silence mode
+        AudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        lastRingMode = AudioManager.getRingerMode();
+        AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_SILENT);
+        AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_VIBRATE);
+
 
         //Handle Show settings
         if (prefs.getBoolean("showMatrix", false)) {
@@ -196,12 +221,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        // Activity's been resumed
+        isPaused = false;
+        wakeLock.acquire();
+        AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_SILENT);
+        AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_VIBRATE);
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        wakeLock.release();
+        // Activity's been paused
+        AudioManager.setRingerMode(lastRingMode);
+        isPaused = true;
         mSensorManager.unregisterListener(this);
     }
 
@@ -288,7 +322,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    //@org.jetbrains.annotations.Contract(pure = true)
+
+    @Contract(pure = true)
     private boolean checkSpecialRoom(int n) {
         for (int c : especialRooms) {
             if (c == n) {
@@ -301,7 +336,12 @@ public class MainActivity extends AppCompatActivity
     private void bindObjects() {
         //TODO use getResId (faster)
         //Better way to this ugly stuff?
-        G[0] = (RadioGroup) findViewById(R.id.radioGroup1);
+        for (int i = 0; i < Matrix.questionsRows; i++) {
+            G[i] = (RadioGroup) findViewById(getResId("radioGroup" + (i + 1)));
+            result[i] = (TextView) findViewById(getResId("resultado" + (i + 1)));
+        }
+
+        /*G[0] = (RadioGroup) findViewById(R.id.radioGroup1);
         G[1] = (RadioGroup) findViewById(R.id.radioGroup2);
         G[2] = (RadioGroup) findViewById(R.id.radioGroup3);
         G[3] = (RadioGroup) findViewById(R.id.radioGroup4);
@@ -341,7 +381,7 @@ public class MainActivity extends AppCompatActivity
         result[16] = (TextView) findViewById(R.id.resultado17);
         result[17] = (TextView) findViewById(R.id.resultado18);
         result[18] = (TextView) findViewById(R.id.resultado19);
-        result[19] = (TextView) findViewById(R.id.resultado20);
+        result[19] = (TextView) findViewById(R.id.resultado20);*/
 
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
@@ -503,6 +543,14 @@ public class MainActivity extends AppCompatActivity
             event.startTracking();
             return true;
         }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            event.startTracking();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
+            event.startTracking();
+            return true;
+        }
         return super.onKeyDown(keyCode, event);
     }
 
@@ -514,9 +562,14 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            //AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_SILENT);
             volumeCount.setText(String.valueOf(volumeHandler.handleVolume(5)));
             triggerThread();
-
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
+            volumeCount.setText(String.valueOf(volumeHandler.handleVolume(1)));
+            triggerThread();
             return true;
         }
         return super.onKeyUp(keyCode, event);
@@ -603,26 +656,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private String mostVoted2String() {
-        return Matrix.MostVoted(0) +
-                Matrix.MostVoted(1) +
-                Matrix.MostVoted(2) +
-                Matrix.MostVoted(3) +
-                Matrix.MostVoted(4) +
-                Matrix.MostVoted(5) +
-                Matrix.MostVoted(6) +
-                Matrix.MostVoted(7) +
-                Matrix.MostVoted(8) +
-                Matrix.MostVoted(9) +
-                Matrix.MostVoted(10) +
-                Matrix.MostVoted(11) +
-                Matrix.MostVoted(12) +
-                Matrix.MostVoted(13) +
-                Matrix.MostVoted(14) +
-                Matrix.MostVoted(15) +
-                Matrix.MostVoted(16) +
-                Matrix.MostVoted(17) +
-                Matrix.MostVoted(18) +
-                Matrix.MostVoted(19);
+        String response = "";
+        for (int x = 0; x < Matrix.questionsRows; x++) {
+            response += Matrix.MostVoted(x);
+        }
+        return response;
     }
 
     private void showQuestionsHideLoading() {
@@ -651,12 +689,16 @@ public class MainActivity extends AppCompatActivity
             if (questionsLayout.getVisibility() == View.VISIBLE) {
                 if (event.values[0] == 0) { //if (event.sensor.getType() == Sensor.TYPE_PROXIMITY)
                     blackScreen.setVisibility(View.VISIBLE);
+                    //setContentView(R.layout.black_screen);
                     questionsLayout.setVisibility(View.GONE);
                 }
             } else {
                 blackScreen.setVisibility(View.GONE);
-                if (loadingLayout.getVisibility() != View.VISIBLE && !otherFragment)//If not loading
+                if (loadingLayout.getVisibility() != View.VISIBLE && !otherFragment) {
                     questionsLayout.setVisibility(View.VISIBLE);
+                    blackScreen.setVisibility(View.GONE);
+                    //setContentView(R.layout.activity_main);
+                }
             }
         }
     }
@@ -665,4 +707,5 @@ public class MainActivity extends AppCompatActivity
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
 }

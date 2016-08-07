@@ -18,7 +18,7 @@ android {
         }
     }
     compileSdkVersion 23
-    buildToolsVersion '24.0.0'
+    buildToolsVersion '24.0.1'
     defaultConfig {
         applicationId "com.company.studyless"
         minSdkVersion 17
@@ -27,6 +27,9 @@ android {
         versionName "1.0"
         multiDexEnabled true
         signingConfig signingConfigs.config
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
     }
     buildTypes {
         release {

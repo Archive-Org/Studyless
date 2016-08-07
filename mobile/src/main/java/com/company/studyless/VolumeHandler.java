@@ -20,12 +20,12 @@ public class VolumeHandler {
 
     public int handleVolume(int points) {
 
-        double diference = System.currentTimeMillis() - lastTime;
-        if (diference <= delay) {
+        double difference = System.currentTimeMillis() - lastTime;
+        if (difference <= delay) {
             volumePressedCount += points;
             lastTime = System.currentTimeMillis();
         } else {
-            volumePressedCount = 1;
+            volumePressedCount = points;
             lastTime = System.currentTimeMillis();
         }
         return volumePressedCount;
@@ -37,10 +37,6 @@ public class VolumeHandler {
 
     public void setVibrator(Vibrator vb) {
         vibrator = vb;
-    }
-
-    public Long getLastWorker() {
-        return lastWorker;
     }
 
     public void setLastWorker(Long lastWorker) {

@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
 
     <application
         android:allowBackup="true"
@@ -30,12 +31,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Intro"
+            android:name=".Views.Intro"
             android:label="Intro"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".Settings"
+            android:name=".Views.Settings"
             android:label="settings"
             android:screenOrientation="portrait">
         </activity>

@@ -6,7 +6,7 @@
  *
  */
 
-package com.company.studyless;
+package com.company.studyless.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -15,12 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class Chat extends Fragment {
+import com.company.studyless.R;
+
+public class Leet extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.chat, container, false);
+        return inflater.inflate(R.layout.leet, container, false);
     }
-
 }

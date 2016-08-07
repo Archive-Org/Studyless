@@ -6,7 +6,7 @@
  *
  */
 
-package com.company.studyless;
+package com.company.studyless.Views;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -15,6 +15,8 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import com.company.studyless.R;
 
 public class Settings extends Activity {
     CheckBox showMatrixCB, showVolumeCB, showNotificationCB;

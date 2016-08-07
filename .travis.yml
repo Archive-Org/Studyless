@@ -8,8 +8,7 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-24.0.0
-    - build-tools-23.0.2
+    - build-tools-24.0.1
     - android-23
     - extra-android-m2repository
     - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
