@@ -15,26 +15,20 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
 import com.company.studyless.R;
 
 public class Settings extends Activity {
-    CheckBox showMatrixCB, showVolumeCB, showNotificationCB;
-    TextView matrixText;
-    boolean showMatrix, showVolume, showNotification;
-    SharedPreferences prefs;
-
-
-
+    private static boolean showMatrix, showVolume, showNotification;
+    private static SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
-        showMatrixCB = (CheckBox) findViewById(R.id.showMatrixCheckBox);
-        showVolumeCB = (CheckBox) findViewById(R.id.showVolumeCheckBox);
-        showNotificationCB = (CheckBox) findViewById(R.id.showNotificationCheckBox);
-        matrixText = (TextView) findViewById(R.id.matrixText);
+        final CheckBox showMatrixCB = (CheckBox) findViewById(R.id.showMatrixCheckBox);
+        final CheckBox showVolumeCB = (CheckBox) findViewById(R.id.showVolumeCheckBox);
+        final CheckBox showNotificationCB = (CheckBox) findViewById(R.id.showNotificationCheckBox);
+        final TextView matrixText = (TextView) findViewById(R.id.matrixText);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         showMatrix = prefs.getBoolean("showMatrix", false);

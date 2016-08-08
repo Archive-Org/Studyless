@@ -18,11 +18,10 @@ class VolumeCheckerThread extends AsyncTask<VolumeThreadObject, Void, Void> {
     protected Void doInBackground(final VolumeThreadObject... params) {
         VolumeHandler vh = params[0].getVh();
         try {
-
             thisWorker = System.currentTimeMillis();
             vh.setLastWorker(thisWorker);
 
-            Thread.sleep(vh.delay);
+            Thread.sleep(VolumeHandler.delay);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -31,34 +30,33 @@ class VolumeCheckerThread extends AsyncTask<VolumeThreadObject, Void, Void> {
         if (vh.lastWorker.equals(thisWorker)) {
             int vibrations;
             switch (params[0].getMatrix().MostVoted(vh.volumePressedCount - 1)) {
-                case "A":
+                case 'A':
                     vibrations = 1;
                     break;
-                case "B":
+                case 'B':
                     vibrations = 2;
                     break;
-                case "C":
+                case 'C':
                     vibrations = 3;
                     break;
-                case "D":
+                case 'D':
                     vibrations = 4;
                     break;
                 default:
                     vibrations = 0;
                     break;
             }
-            try {
-                int x = 0;
-                while (x < vibrations) {
-                    x++;
-                    vh.getVibrator().vibrate(200);
-                    Thread.sleep(500);
+            if (vibrations == 0) {
+                vh.getVibrator().vibrate(1000);
+            } else {
+                try {
+                    for (int x = 0; x < vibrations; x++) {
+                        vh.getVibrator().vibrate(200);
+                        Thread.sleep(500);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                if (vibrations == 0) {
-                    vh.getVibrator().vibrate(1000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
         return null;

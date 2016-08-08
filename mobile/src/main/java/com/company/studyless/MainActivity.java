@@ -8,67 +8,39 @@
 
 package com.company.studyless;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.os.Vibrator;
+import android.net.Uri;
+import android.os.*;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.company.studyless.Views.Intro;
 import com.company.studyless.Views.Settings;
-import com.company.studyless.fragments.BlancFragment;
-import com.company.studyless.fragments.Chat;
-import com.company.studyless.fragments.Info;
-import com.company.studyless.fragments.Leet;
-import com.company.studyless.fragments.News;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.company.studyless.fragments.*;
+import com.google.firebase.database.*;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-
-import org.jetbrains.annotations.Contract;
 
 import java.lang.reflect.Field;
 import java.util.Random;
@@ -76,35 +48,33 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
-    private LinearLayout questionsLayout, blackScreen;
-    private Animation fadeIn, fadeOut;
-    private RelativeLayout loadingLayout;
-    private Matrix Matrix = new Matrix();
-    private RadioGroup[] G = new RadioGroup[Matrix.questionsRows];
-    private TextView[] result = new TextView[Matrix.questionsRows];
-    private TextView matrixText, volumeCount;
-    private EditText roomField;
-    private DatabaseReference mDatabase;
-    private Random random = new Random();
-    private VolumeHandler volumeHandler = new VolumeHandler();
-    private int room = random.nextInt(100000);
-    private boolean showNotification, showMatrix;
-    private boolean otherFragment = false;
-    private int[] checkedButtons = {
+
+    private static final RadioGroup[] G = new RadioGroup[com.company.studyless.Matrix.questionsRows];
+    private static final TextView[] result = new TextView[com.company.studyless.Matrix.questionsRows];
+    private static FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private static LinearLayout questionsLayout, blackScreen;
+    private static Animation fadeIn, fadeOut;
+    private static RelativeLayout loadingLayout;
+    private static Matrix Matrix = new Matrix();
+    private static TextView matrixText, volumeCount;
+    private static EditText roomField;
+    private static DatabaseReference mDatabase;
+    private static Random random = new Random();
+    private static VolumeHandler volumeHandler = new VolumeHandler();
+    private static boolean showNotification, showMatrix;
+    private static int[] checkedButtons = {
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999,
             9999, 9999, 9999, 9999, 9999};
-    private int[] especialRooms = {1337, 2512, 1, 1234, 1000000};
-    private SensorManager mSensorManager;
-    private Sensor mProximity;
-    private PowerManager.WakeLock wakeLock;
-    private boolean currentFocus;
-    private boolean isPaused;
-    private Handler collapseNotificationHandler;
-    private int lastRingMode;
-    private AudioManager AudioManager;
+    private static SensorManager mSensorManager;
+    private static Sensor mProximity;
+    private static PowerManager.WakeLock wakeLock;
+    private static int lastRingMode;
+    private static AudioManager AudioManager;
+    private static DrawerLayout drawer;
+    private int room = random.nextInt(100000);
+    private boolean otherFragment = false;
 
     private int getResId(String resName) {
         try {
@@ -119,6 +89,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Load splash screen
+        setContentView(R.layout.splash_screen);
+        VideoView vV = (VideoView) findViewById(R.id.videoView);
+        Uri path = Uri.parse("android.resource://com.company.studyless/"
+                + R.raw.splash);
+        vV.setVideoURI(path);
+        vV.start();
+
+
         //Intro if 1st time app start
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean previouslyStarted = prefs.getBoolean("Previously started", false);
@@ -130,6 +110,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
 
+
         fadeIn = AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_in);
         fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
         //Display activity main
@@ -138,6 +119,7 @@ public class MainActivity extends AppCompatActivity
         //Bind views
         loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
         loadingLayout.setVisibility(View.VISIBLE);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         bindObjects();
 
         //Hide layout show
@@ -149,44 +131,40 @@ public class MainActivity extends AppCompatActivity
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         //Prevent lock
-        PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        final PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
         wakeLock.acquire();
 
-
-        //TODO implement inflater
-        /*FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, new Question_list()).commit();*/
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        //Change colors and startup
-        String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043",
+        //Change colors at startup
+        final String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043",
                 "#AAA95A", "#414066", "#1B2D2A"};
-        int randomColor = Color.parseColor(colorsArray[random.nextInt(colorsArray.length)]);
-        int darkerColor = ColorUtils.blendARGB(randomColor, Color.BLACK, 0.2F);
+        final int randomColor = Color.parseColor(colorsArray[random.nextInt(colorsArray.length)]);
+        final int darkerColor = ColorUtils.blendARGB(randomColor, Color.BLACK, 0.2F);
         toolbar.setBackgroundColor(randomColor);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
+            final Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(darkerColor);
         }
 
+        //Config toolbar
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //Block drawer till DB loaded
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         //Initialize database and Vibrations
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         Vibrator vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         volumeHandler.setVibrator(vibratorService);
+
         //Silence mode
         AudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         lastRingMode = AudioManager.getRingerMode();
@@ -222,7 +200,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         // Activity's been resumed
-        isPaused = false;
         wakeLock.acquire();
         AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_SILENT);
         AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_VIBRATE);
@@ -235,7 +212,6 @@ public class MainActivity extends AppCompatActivity
         wakeLock.release();
         // Activity's been paused
         AudioManager.setRingerMode(lastRingMode);
-        isPaused = true;
         mSensorManager.unregisterListener(this);
     }
 
@@ -280,30 +256,27 @@ public class MainActivity extends AppCompatActivity
                         Toast.LENGTH_SHORT).show();
 
             } else {
-                if (checkSpecialRoom(n)) {
-                    Fragment fragment = null;
-                    switch (n) {
-                        case 1337:
-                            fragment = new Leet();
-                            break;
-                        case 1:
-                            break;
-                        case 2512:
-                            break;
-                        case 1000000:
-                            break;
+                Fragment fragment = null;
+                switch (n) {
+                    case 1337:
+                        fragment = new Leet();
+                        break;
+                    case 1:
+                        break;
+                    case 2512:
+                        break;
+                    case 1000000:
+                        break;
+                    default:
+                        break;
+                }
 
-                    }
-
-                    if (fragment != null) {
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.frame_layout, fragment).commit();
-                    } else {
-                        this.getFragmentManager().popBackStack();
-                    }
+                if (fragment != null) {
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame_layout, fragment).commit();
                 } else {
-
+                    this.getFragmentManager().popBackStack();
                     room = n;
                     mDatabase = FirebaseDatabase.getInstance().getReference();
                     clearSelection();
@@ -316,79 +289,20 @@ public class MainActivity extends AppCompatActivity
             }
 
         }
-
         roomField.setText("");
         roomField.setHint(getString(R.string.Room_) + String.valueOf(room));
-
-    }
-
-
-    @Contract(pure = true)
-    private boolean checkSpecialRoom(int n) {
-        for (int c : especialRooms) {
-            if (c == n) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void bindObjects() {
-        //TODO use getResId (faster)
-        //Better way to this ugly stuff?
-        for (int i = 0; i < Matrix.questionsRows; i++) {
+        for (int i = 0; i < com.company.studyless.Matrix.questionsRows; i++) {
             G[i] = (RadioGroup) findViewById(getResId("radioGroup" + (i + 1)));
             result[i] = (TextView) findViewById(getResId("resultado" + (i + 1)));
         }
-
-        /*G[0] = (RadioGroup) findViewById(R.id.radioGroup1);
-        G[1] = (RadioGroup) findViewById(R.id.radioGroup2);
-        G[2] = (RadioGroup) findViewById(R.id.radioGroup3);
-        G[3] = (RadioGroup) findViewById(R.id.radioGroup4);
-        G[4] = (RadioGroup) findViewById(R.id.radioGroup5);
-        G[5] = (RadioGroup) findViewById(R.id.radioGroup6);
-        G[6] = (RadioGroup) findViewById(R.id.radioGroup7);
-        G[7] = (RadioGroup) findViewById(R.id.radioGroup8);
-        G[8] = (RadioGroup) findViewById(R.id.radioGroup9);
-        G[9] = (RadioGroup) findViewById(R.id.radioGroup10);
-        G[10] = (RadioGroup) findViewById(R.id.radioGroup11);
-        G[11] = (RadioGroup) findViewById(R.id.radioGroup12);
-        G[12] = (RadioGroup) findViewById(R.id.radioGroup13);
-        G[13] = (RadioGroup) findViewById(R.id.radioGroup14);
-        G[14] = (RadioGroup) findViewById(R.id.radioGroup15);
-        G[15] = (RadioGroup) findViewById(R.id.radioGroup16);
-        G[16] = (RadioGroup) findViewById(R.id.radioGroup17);
-        G[17] = (RadioGroup) findViewById(R.id.radioGroup18);
-        G[18] = (RadioGroup) findViewById(R.id.radioGroup19);
-        G[19] = (RadioGroup) findViewById(R.id.radioGroup20);
-
-        result[0] = (TextView) findViewById(R.id.resultado1);
-        result[1] = (TextView) findViewById(R.id.resultado2);
-        result[2] = (TextView) findViewById(R.id.resultado3);
-        result[3] = (TextView) findViewById(R.id.resultado4);
-        result[4] = (TextView) findViewById(R.id.resultado5);
-        result[5] = (TextView) findViewById(R.id.resultado6);
-        result[6] = (TextView) findViewById(R.id.resultado7);
-        result[7] = (TextView) findViewById(R.id.resultado8);
-        result[8] = (TextView) findViewById(R.id.resultado9);
-        result[9] = (TextView) findViewById(R.id.resultado10);
-        result[10] = (TextView) findViewById(R.id.resultado11);
-        result[11] = (TextView) findViewById(R.id.resultado12);
-        result[12] = (TextView) findViewById(R.id.resultado13);
-        result[13] = (TextView) findViewById(R.id.resultado14);
-        result[14] = (TextView) findViewById(R.id.resultado15);
-        result[15] = (TextView) findViewById(R.id.resultado16);
-        result[16] = (TextView) findViewById(R.id.resultado17);
-        result[17] = (TextView) findViewById(R.id.resultado18);
-        result[18] = (TextView) findViewById(R.id.resultado19);
-        result[19] = (TextView) findViewById(R.id.resultado20);*/
-
         roomField = (EditText) findViewById(R.id.roomField);
         matrixText = (TextView) findViewById(R.id.matrixText);
         volumeCount = (TextView) findViewById(R.id.volumecount);
         questionsLayout = (LinearLayout) findViewById(R.id.questionsLayout);
         blackScreen = (LinearLayout) findViewById(R.id.blackScreen);
-
     }
 
     private void getDatabase() {
@@ -399,13 +313,10 @@ public class MainActivity extends AppCompatActivity
                     Matrix.SyncWDB(dataSnapshot.getValue());
 
                     if (showMatrix) {
-                        matrixText.setText(Matrix.matrix2string(Matrix.getData(),
-                                Matrix.questionsRows, 4));
+                        matrixText.setText(Matrix.matrix2string());
                     }
-                    int i = 0;
-                    while (i < result.length) {
+                    for (int i = 0; i < result.length; i++) {
                         result[i].setText(betterMostVoted(i));
-                        i++;
                     }
 
                     if (loadingLayout.getVisibility() != View.GONE) {
@@ -414,8 +325,7 @@ public class MainActivity extends AppCompatActivity
                     if (showNotification) {
                         showNotification();
                     }
-
-
+                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 } else {
                     clearSelection();
                     roomField.setHint(getString(R.string.Room_) + String.valueOf(room));
@@ -450,7 +360,6 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-
             super.onBackPressed();
         }
     }
@@ -468,8 +377,6 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
@@ -480,8 +387,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             return true;
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -489,9 +394,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-
         Fragment fragment = null;
         int id = item.getItemId();
+
         if (id == R.id.nav_questions) {
             otherFragment = false;
             questionsLayout.setVisibility(View.VISIBLE);
@@ -506,14 +411,11 @@ public class MainActivity extends AppCompatActivity
             otherFragment = true;
             questionsLayout.setVisibility(View.GONE);
             hideKB();
-
         } else if (id == R.id.nav_share) {
-
             Intent sharingIntent = new Intent(Intent.ACTION_SEND)
                     .setType("text/plain")
                     .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.Share_subject))
                     .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_body));
-
             startActivity(Intent.createChooser(sharingIntent, getString(R.string.Share_via)));
         } else if (id == R.id.nav_chat) {
             fragment = new Chat();
@@ -521,7 +423,6 @@ public class MainActivity extends AppCompatActivity
             questionsLayout.setVisibility(View.GONE);
             hideKB();
         }
-
 
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
@@ -539,15 +440,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            event.startTracking();
-            return true;
-        }
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            event.startTracking();
-            return true;
-        }
-        if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
             event.startTracking();
             return true;
         }
@@ -562,7 +455,6 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            //AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_SILENT);
             volumeCount.setText(String.valueOf(volumeHandler.handleVolume(5)));
             triggerThread();
             return true;
@@ -578,17 +470,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            //volumeCount.setText(String.valueOf(volumeHandler.handleVolume(4)));
-            //triggerThread();
-
             return true;
         }
         return super.onKeyLongPress(keyCode, event);
     }
 
     private void topButtonArray() {
-        checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
-                9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
+        checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
+                9999, 9999, 9999, 9999, 9999, 9999};
     }
 
     private void clearSelection() {
@@ -604,43 +493,41 @@ public class MainActivity extends AppCompatActivity
         new VolumeCheckerThread().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
     }
 
-    String betterMostVoted(int row) {
-        if (Matrix.MostVoted(row).equals("?")) {
+    private String betterMostVoted(int row) {
+        if (Matrix.MostVoted(row) == '?') {
             return getString(R.string.tie);
         } else {
-            return Matrix.MostVoted(row);
+            return String.valueOf(Matrix.MostVoted(row));
         }
     }
 
     private void showNotification() {
-
-        Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
-                R.mipmap.ic_launcher),
-                getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width),
-                getResources()
-                        .getDimensionPixelSize(android.R.dimen.notification_large_icon_height),
-                true);
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent,
-                Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        Notification.Builder builder = new Notification.Builder(getApplicationContext());
-        builder.setContentTitle(mostVoted2String());
-        builder.setContentText("By Studyless");
-        //builder.setSubText("Some sub text");
-        builder.setNumber(101);
-        builder.setContentIntent(pendingIntent);
-        //builder.setTicker("Fancy Notification");
-        builder.setSmallIcon(R.drawable.ic_tik);
-        builder.setLargeIcon(bm);
-        builder.setAutoCancel(true);
-        builder.setPriority(Notification.PRIORITY_MAX);
-        builder.setOngoing(true);
-
-        builder.setSmallIcon(android.R.color.transparent); //Tested and worked in API 14
-        Notification notification = builder.build();
-        NotificationManager notificationManger =
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_nav_icon)
+                        .setContentTitle(mostVoted2String())
+                        .setContentText(getString(R.string.by_studyless))
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setSmallIcon(R.drawable.ic_tik);
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManger.notify(1, notification);
+        mNotificationManager.notify(1, mBuilder.build());
     }
 
     private void hideKB() {
@@ -655,12 +542,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @NonNull
     private String mostVoted2String() {
-        String response = "";
-        for (int x = 0; x < Matrix.questionsRows; x++) {
-            response += Matrix.MostVoted(x);
+        StringBuilder buf = new StringBuilder();
+        for (int x = 0; x < com.company.studyless.Matrix.questionsRows; x++) {
+            buf.append(Matrix.MostVoted(x));
         }
-        return response;
+        return buf.toString();
     }
 
     private void showQuestionsHideLoading() {
@@ -687,17 +575,18 @@ public class MainActivity extends AppCompatActivity
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             if (questionsLayout.getVisibility() == View.VISIBLE) {
-                if (event.values[0] == 0) { //if (event.sensor.getType() == Sensor.TYPE_PROXIMITY)
+                if (event.values[0] == 0) {
                     blackScreen.setVisibility(View.VISIBLE);
                     //setContentView(R.layout.black_screen);
                     questionsLayout.setVisibility(View.GONE);
+                    fullScreen(true);
                 }
             } else {
                 blackScreen.setVisibility(View.GONE);
                 if (loadingLayout.getVisibility() != View.VISIBLE && !otherFragment) {
                     questionsLayout.setVisibility(View.VISIBLE);
                     blackScreen.setVisibility(View.GONE);
-                    //setContentView(R.layout.activity_main);
+                    fullScreen(false);
                 }
             }
         }
@@ -708,4 +597,17 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private void fullScreen(boolean x) {
+        if (x) {
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                requestWindowFeature(Window.getDefaultFeatures(this));
+            }
+            getWindow().setFlags(WindowManager.LayoutParams.FIRST_APPLICATION_WINDOW,
+                    WindowManager.LayoutParams.FIRST_APPLICATION_WINDOW);
+        }
+    }
 }

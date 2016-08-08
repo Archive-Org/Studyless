@@ -9,25 +9,19 @@
 package com.company.studyless;
 
 import android.os.AsyncTask;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 class InitializeRoomThread extends AsyncTask<Integer, Void, Void> {
+    private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private Matrix Matrix = new Matrix();
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     private void initialize(int roomNumber) {
-        int e = 0;
-        int i = 0;
-        while (e < Matrix.questionsRows) {
-            while (i < 4) {
-                mDatabase.child("Rooms/" + "room_" + roomNumber + "/" + e + "/" + i + "").setValue(0);
-                i++;
-            }
-            i = 0;
-            e++;
 
+        for (int x = 0; x < com.company.studyless.Matrix.questionsRows; x++) {
+            for (int i = 0; i < 4; i++) {
+                mDatabase.child("Rooms/" + "room_" + roomNumber + "/" + x + "/" + i + "").setValue(0);
+            }
         }
     }
 

@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import com.company.studyless.MainActivity;
 import com.company.studyless.R;
 import com.github.paolorotolo.appintro.AppIntro;
@@ -65,7 +64,7 @@ public class Intro extends AppIntro {
     }
 
     private void loadMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        final Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

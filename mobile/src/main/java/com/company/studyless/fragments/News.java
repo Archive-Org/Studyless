@@ -18,23 +18,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.company.studyless.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 public class News extends Fragment {
-    FirebaseRemoteConfig mFirebaseRemoteConfig;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.news, container, false);
+        final View view = inflater.inflate(R.layout.news, container, false);
 
-        TextView title = (TextView) view.findViewById(R.id.news_title);
-        TextView body = (TextView) view.findViewById(R.id.news_body);
+        final TextView title = (TextView) view.findViewById(R.id.news_title);
+        final TextView body = (TextView) view.findViewById(R.id.news_body);
 
         //Gets news every 12 hours
+        final FirebaseRemoteConfig mFirebaseRemoteConfig;
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         mFirebaseRemoteConfig.fetch() //Fetch news every hour
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

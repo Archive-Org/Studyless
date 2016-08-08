@@ -11,10 +11,10 @@ package com.company.studyless;
 import java.util.ArrayList;
 
 class Matrix {
-    int questionsRows = 20;
-    private int[][] Data = new int[questionsRows][4];
+    static int questionsRows = 20;
+    private static int[][] Data = new int[questionsRows][4];
 
-    public int[][] getData() {
+    int[][] getData() {
         return Data;
     }
 
@@ -39,51 +39,45 @@ class Matrix {
         }
     }
 
-    String MostVoted(int row) {
-        String a = "?";
+    char MostVoted(int row) {
+        char a = '?';
         if (row > questionsRows) {
             return a;
         }
         if (Data[row][0] > Data[row][1] && Data[row][0] > Data[row][2] && Data[row][0] > Data[row][3]) {
-            a = "A";
+            a = 'A';
         } else if (Data[row][1] > Data[row][0] && Data[row][1] > Data[row][2] && Data[row][1] > Data[row][3]) {
-            a = "B";
+            a = 'B';
         } else if (Data[row][2] > Data[row][0] && Data[row][2] > Data[row][1] && Data[row][2] > Data[row][3]) {
-            a = "C";
+            a = 'C';
         } else if (Data[row][3] > Data[row][0] && Data[row][3] > Data[row][1] && Data[row][3] > Data[row][2]) {
-            a = "D";
+            a = 'D';
         }
         return a;
 
     }
 
-    public int[] getData(int row) {
+    int[] getData(int row) {
         return Data[row];
     }
 
-    public void addOne(int row, int column) {
-        this.Data[row][column] += 1;
+    void addOne(int row, int column) {
+        Data[row][column] += 1;
     }
 
-    public void restOne(int row, int column) {
-        this.Data[row][column] -= 1;
+    void restOne(int row, int column) {
+        Data[row][column] -= 1;
     }
 
-    String matrix2string(int[][] matrix2convert, int i, int e) {
-        String converted = "";
-        int ii = 0;
-        int ee = 0;
-        while (ii < i) {
-            converted += "\n";
-            while (ee < e) {
-                converted += matrix2convert[ii][ee] + " ";
-                ee++;
-
+    String matrix2string() {
+        StringBuilder buf = new StringBuilder();
+        for (int x = 0; x < questionsRows; x++) {
+            buf.append("\n");
+            for (int y = 0; y < 4; y++) {
+                buf.append(Data[x][y]).append(" ");
 
             }
-            ee = 0;
-            ii++;
         }
-        return converted;
+        return buf.toString();
     }
 }

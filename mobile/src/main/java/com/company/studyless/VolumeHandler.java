@@ -11,14 +11,14 @@ package com.company.studyless;
 
 import android.os.Vibrator;
 
-public class VolumeHandler {
-    public int volumePressedCount = 0;
-    public long lastTime = 0L;
-    public Long lastWorker = 0L;
-    int delay = 1000;
-    Vibrator vibrator;
+class VolumeHandler {
+    static final int delay = 1000;
+    private static Vibrator vibrator;
+    int volumePressedCount = 0;
+    Long lastWorker = 0L;
+    private long lastTime = 0L;
 
-    public int handleVolume(int points) {
+    int handleVolume(int points) {
 
         double difference = System.currentTimeMillis() - lastTime;
         if (difference <= delay) {
@@ -31,16 +31,16 @@ public class VolumeHandler {
         return volumePressedCount;
     }
 
-    public Vibrator getVibrator() {
+    Vibrator getVibrator() {
         return vibrator;
     }
 
-    public void setVibrator(Vibrator vb) {
-        vibrator = vb;
+    void setVibrator(Vibrator vb) {
+        VolumeHandler.vibrator = vb;
     }
 
-    public void setLastWorker(Long lastWorker) {
-        this.lastWorker = lastWorker;
+    void setLastWorker(Long l) {
+        lastWorker = l;
     }
 }
 // If no presses in 4 seconds vibrate
