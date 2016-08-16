@@ -66,6 +66,7 @@ public class Intro extends AppIntro {
     private void loadMainActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+
     }
 
     @Override

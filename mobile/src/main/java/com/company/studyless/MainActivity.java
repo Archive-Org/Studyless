@@ -10,6 +10,7 @@ package com.company.studyless;
 
 import android.app.*;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -31,6 +32,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -39,6 +41,16 @@ import android.widget.*;
 import com.company.studyless.Views.Intro;
 import com.company.studyless.Views.Settings;
 import com.company.studyless.fragments.*;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.firebase.database.*;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
@@ -46,11 +58,14 @@ import java.lang.reflect.Field;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener,
+        GoogleApiClient.OnConnectionFailedListener {
 
 
     private static final RadioGroup[] G = new RadioGroup[com.company.studyless.Matrix.questionsRows];
     private static final TextView[] result = new TextView[com.company.studyless.Matrix.questionsRows];
+    private static final String TAG = "SignInActivity";
+    private static final int RC_SIGN_IN = 9001;
     private static FirebaseRemoteConfig mFirebaseRemoteConfig;
     private static LinearLayout questionsLayout, blackScreen;
     private static Animation fadeIn, fadeOut;
@@ -73,8 +88,12 @@ public class MainActivity extends AppCompatActivity
     private static int lastRingMode;
     private static AudioManager AudioManager;
     private static DrawerLayout drawer;
+    Toolbar toolbar;
+    SharedPreferences prefs;
+    GoogleSignInAccount googleAccount;
     private int room = random.nextInt(100000);
     private boolean otherFragment = false;
+    private GoogleApiClient mGoogleApiClient;
 
     private int getResId(String resName) {
         try {
@@ -91,38 +110,29 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         //Load splash screen
-        setContentView(R.layout.splash_screen);
-        VideoView vV = (VideoView) findViewById(R.id.videoView);
-        Uri path = Uri.parse("android.resource://com.company.studyless/"
-                + R.raw.splash);
-        vV.setVideoURI(path);
-        vV.start();
-
+        //loadSplashScreen();
 
         //Intro if 1st time app start
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean previouslyStarted = prefs.getBoolean("Previously started", false);
-        if (!previouslyStarted) {
-            SharedPreferences.Editor edit = prefs.edit();
-            edit.putBoolean("Previously started", Boolean.TRUE).apply();
-            Intent intent = new Intent(this, Intro.class);
-
-            startActivity(intent);
-        }
-
+        checkFirstTime();
 
         fadeIn = AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_in);
         fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
+
         //Display activity main
         setContentView(R.layout.activity_main);
 
+        //Load ad
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         //Bind views
-        loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
-        loadingLayout.setVisibility(View.VISIBLE);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         bindObjects();
 
-        //Hide layout show
+        //Login
+        setUpLogging();
+
+        //Hide until loaded
         questionsLayout.setVisibility(View.GONE);
         blackScreen.setVisibility(View.GONE);
 
@@ -131,9 +141,7 @@ public class MainActivity extends AppCompatActivity
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         //Prevent lock
-        final PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
-        wakeLock.acquire();
+        preventLock();
 
         //Change colors at startup
         final String[] colorsArray = {"#6564DB", "#232ED1", "#DD0426", "#273043",
@@ -148,14 +156,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         //Config toolbar
-        setSupportActionBar(toolbar);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        configToolbar();
+
         //Block drawer till DB loaded
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
@@ -166,13 +168,63 @@ public class MainActivity extends AppCompatActivity
         volumeHandler.setVibrator(vibratorService);
 
         //Silence mode
+        setUpAudio();
+
+        //Handle settings
+        handleSettings();
+
+        //Hide keyboard
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
+        //Fetch data
+        getDatabase();
+    }
+
+    void setUpLogging() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+    }
+
+    void checkFirstTime() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyStarted = prefs.getBoolean("Previously started", false);
+        if (!previouslyStarted) {
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putBoolean("Previously started", Boolean.TRUE).apply();
+            Intent intent = new Intent(this, Intro.class);
+            startActivity(intent);
+        }
+    }
+
+    void loadSplashScreen() {
+        setContentView(R.layout.splash_screen);
+        VideoView vV = (VideoView) findViewById(R.id.videoView);
+        Uri path = Uri.parse("android.resource://com.company.studyless/"
+                + R.raw.splash);
+        vV.setVideoURI(path);
+        vV.start();
+    }
+
+    void setUpAudio() {
         AudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         lastRingMode = AudioManager.getRingerMode();
         AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_SILENT);
         AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_VIBRATE);
+    }
 
+    void preventLock() {
+        final PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
+        wakeLock.acquire();
+    }
 
-        //Handle Show settings
+    void handleSettings() {
         if (prefs.getBoolean("showMatrix", false)) {
             matrixText.setVisibility(View.VISIBLE);
         } else {
@@ -185,17 +237,18 @@ public class MainActivity extends AppCompatActivity
         }
         showNotification = prefs.getBoolean("showNotification", false);
         showMatrix = prefs.getBoolean("showMatrix", false);
-
-
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-        );
-
-
-        //Fetch data
-        getDatabase();
     }
 
+    void configToolbar() {
+        setSupportActionBar(toolbar);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -213,6 +266,60 @@ public class MainActivity extends AppCompatActivity
         // Activity's been paused
         AudioManager.setRingerMode(lastRingMode);
         mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (opr.isDone()) {
+            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+            // and the GoogleSignInResult will be available instantly.
+            Log.d(TAG, "Got cached sign-in");
+            GoogleSignInResult result = opr.get();
+            handleSignInResult(result);
+        } else {
+            // If the user has not previously signed in on this device or the sign-in has expired,
+            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+            // single sign-on will occur in this branch.
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(GoogleSignInResult googleSignInResult) {
+                    handleSignInResult(googleSignInResult);
+                }
+            });
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            googleAccount = result.getSignInAccount();
+            saveUserToDatabase();
+        }
+    }
+
+    void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+    }
+
+    void saveUserToDatabase() {
+        User user = new User(googleAccount.getEmail(), googleAccount.getId());
+        mDatabase.child("Users/" + googleAccount.getDisplayName())
+                .setValue(user);
     }
 
     //Handle all Matrix buttons
@@ -294,6 +401,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void bindObjects() {
+        loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
+        //Quickly show loading...
+        loadingLayout.setVisibility(View.VISIBLE);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         for (int i = 0; i < com.company.studyless.Matrix.questionsRows; i++) {
             G[i] = (RadioGroup) findViewById(getResId("radioGroup" + (i + 1)));
             result[i] = (TextView) findViewById(getResId("resultado" + (i + 1)));
@@ -338,6 +450,7 @@ public class MainActivity extends AppCompatActivity
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        signIn();
 
     }
 
@@ -479,20 +592,17 @@ public class MainActivity extends AppCompatActivity
         checkedButtons = new int[]{9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999,
                 9999, 9999, 9999, 9999, 9999, 9999};
     }
-
     private void clearSelection() {
         for (RadioGroup g : G) {
             g.clearCheck();
         }
     }
-
     private void triggerThread() {
         VolumeThreadObject data = new VolumeThreadObject();
         data.setVh(volumeHandler);
         data.setMatrix(Matrix);
         new VolumeCheckerThread().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
     }
-
     private String betterMostVoted(int row) {
         if (Matrix.MostVoted(row) == '?') {
             return getString(R.string.tie);
@@ -500,7 +610,6 @@ public class MainActivity extends AppCompatActivity
             return String.valueOf(Matrix.MostVoted(row));
         }
     }
-
     private void showNotification() {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -515,6 +624,7 @@ public class MainActivity extends AppCompatActivity
         // started Activity.
         // This ensures that navigating backward from the Activity leads out of
         // your application to the Home screen.
+
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack for the Intent (but not the Intent itself)
         // Adds the Intent that starts the Activity to the top of the stack
@@ -529,7 +639,6 @@ public class MainActivity extends AppCompatActivity
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(1, mBuilder.build());
     }
-
     private void hideKB() {
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -541,7 +650,6 @@ public class MainActivity extends AppCompatActivity
             System.out.println(e.getMessage());
         }
     }
-
     @NonNull
     private String mostVoted2String() {
         StringBuilder buf = new StringBuilder();
@@ -550,7 +658,6 @@ public class MainActivity extends AppCompatActivity
         }
         return buf.toString();
     }
-
     private void showQuestionsHideLoading() {
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -570,7 +677,6 @@ public class MainActivity extends AppCompatActivity
         questionsLayout.setVisibility(View.VISIBLE);
         questionsLayout.startAnimation(fadeIn);
     }
-
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
@@ -579,35 +685,45 @@ public class MainActivity extends AppCompatActivity
                     blackScreen.setVisibility(View.VISIBLE);
                     //setContentView(R.layout.black_screen);
                     questionsLayout.setVisibility(View.GONE);
-                    fullScreen(true);
                 }
             } else {
                 blackScreen.setVisibility(View.GONE);
                 if (loadingLayout.getVisibility() != View.VISIBLE && !otherFragment) {
                     questionsLayout.setVisibility(View.VISIBLE);
                     blackScreen.setVisibility(View.GONE);
-                    fullScreen(false);
                 }
             }
         }
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    public AlertDialog logingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
+        builder.setTitle("Iniciar Secion con Google")
+                .setMessage("Para acceder a alguanas caracteristicas tiene que iniciar secion, ¿desea continuar?")
+                .setPositiveButton("Si",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                signIn();
+                            }
+                        })
+                .setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+
+        return builder.create();
     }
 
-    private void fullScreen(boolean x) {
-        if (x) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                requestWindowFeature(Window.getDefaultFeatures(this));
-            }
-            getWindow().setFlags(WindowManager.LayoutParams.FIRST_APPLICATION_WINDOW,
-                    WindowManager.LayoutParams.FIRST_APPLICATION_WINDOW);
-        }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 }
