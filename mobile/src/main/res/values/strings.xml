@@ -16,17 +16,17 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_main2" translatable="false">MainActivity</string>
 
-    <string name="Room_">"You\'re in room "</string>
+    <string name="Room_">"You\'re in room: "</string>
 
 
     <string name="first_slide_title">Welcome StudyLess</string>
     <string name="first_slide_description">Have more time to do what you like and get more productive</string>
 
     <string name="second_slide_title">Get the best response with the help of your friends</string>
-    <string name="second_slide_description">Join together to the same room and vote for the best answer, the app will sum the votes and show the best, no more confussions with conflicting opinions</string>
+    <string name="second_slide_description">Join together to the same room and vote for the best answer, the app will sum the votes and show the best, no more confusions with conflicting opinions</string>
 
     <string name="third_slide_title">Collaborate with your classmates</string>
-    <string name="third_slide_description">The more people the best, every room can have up to 10000 people, I bet your class doen\'t have that much</string>
+    <string name="third_slide_description">The more people the best, every room can have up to 10000 people</string>
     <string name="done">Done</string>
     <string name="skip">Skip</string>
     <string name="action_show_intro">Show help</string>
@@ -43,7 +43,7 @@
     <string name="forth_slide_title">Be descret, get the answers via vibrations</string>
     <string name="forth_slide_description">Use your phone volume keys to choose the question and the phone will vibrate based on the most voted answers</string>
     <string name="fifth_slide_title">Disclaimer</string>
-    <string name="fifth_slide_description">I am not responsible for the use you make of this app, I\'m warning you, taking risks is ok but be them calculated ones.</string>
+    <string name="fifth_slide_description">I am not responsible for the use you make of this app, I\'m warning you, taking risks is OK but be them calculated ones.</string>
     <string name="share_body">Hey, take a look at StudyLess, we can use it.</string>
     <string name="Share_via">Share via</string>
     <string name="communicate">Communicate</string>
@@ -53,17 +53,19 @@
     <string name="what_title">What is Studyless</string>
     <string name="what_body">With Studyless I wanted to develop an old idea of communicating through morse code using vibrations, this is a quite more expanded version of that. It is a non-intrusive way of comunicating, you may use it the way you like</string>
     <string name="how_title">How to use</string>
-    <string name="how_body">To use it you first have to join a room, at start time you are assigned a random room but you can change it in the buttom of the question list. Once in a room you will see all of them in neutral state, now all your friends can join (the more the better) and begin choosing anwers. \n The most botted will appear in place of "Not sure"</string>
+    <string name="how_body">To use it you first have to join a room, at start time you are assigned a random room but you can change it in the button of the question list. Once in a room you will see all of them in neutral state, now all your friends can join (the more the better) and begin choosing answers. \n The most voted will appear in place of "Not sure"</string>
     <string name="how_vibrations_title">How vibrations works</string>
-    <string name="how_vibrations_body">If you want to go to the next level, you can use the phone vibration to retive the answers. To do so, you need the device unlocked and the app open (It is recommented to desactivate the look screen and leave the app open) then you are going to use the volume down key to select the question, each press counts in a sum, so if you are interested in the 4th question you have to press the volume down key 4 times, for the 5th five times and so on… After one second without key presses the device will vibrate gibing you the most voted answer in the following way:\n1 short vibration = A\n2 short vibrations = B\n3 short vibrations = C\n4 short vibrations = D\nAnd 1 long vibration means that there is noclear answer\n\n**</string>
+    <string name="how_vibrations_body">If you want to go to the next level, you can use the phone vibration to retrieve the answers. To do so, you need the device unlocked and the app open (It is recommenced to deactivate the look screen and leave the app open) then you are going to use the volume down key to select the question, each press counts in a sum, so if you are interested in the 4th question you have to press the volume down key 4 times, for the 5th five times and so on… After one second without key presses the device will vibrate gibing you the most voted answer in the following way:\n1 short vibration = A\n2 short vibrations = B\n3 short vibrations = C\n4 short vibrations = D\nAnd 1 long vibration means that there is no clear answer\n\n**</string>
     <string name="tips_title">Tips</string>
     <string name="tips_body">To get a better experience you should desactivate the lock screen to be able to use the vibrations functionality without looking at the screen as the vibrations doesn\'t work when the phone is locked</string>
     <string name="contact_title">Reporting Bugs and suggestions</string>
-    <string name="contact_body">I really apreciate suggestions and bugs summits, send them to </string>
+    <string name="contact_body">I really appreciate suggestions and bugs summits, send them to Studyless@workmail.com</string>
     <string name="Share_subject">Studyless</string>
     <string name="by_studyless">By Studyless</string>
     <string name="news">News</string>
     <string name="show_notification">Show notification</string>
     <string name="chat">Chat</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="news_title">Noticias</string>
+    <string name="news_body">Nothing here yet</string>
 </resources>
