@@ -94,13 +94,13 @@ public class MainActivity extends AppCompatActivity
     private static final TextView[] result = new TextView[com.company.studyless.Matrix.questionsRows];
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
-    private static FirebaseRemoteConfig mFirebaseRemoteConfig;
-    private static LinearLayout questionsLayout, blackScreen;
+    private  FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private  LinearLayout questionsLayout, blackScreen;
     private static Animation fadeIn, fadeOut;
-    private static RelativeLayout loadingLayout;
+    private RelativeLayout loadingLayout;
     private static Matrix Matrix = new Matrix();
-    private static TextView matrixText, volumeCount;
-    private static EditText roomField;
+    private TextView matrixText, volumeCount;
+    private EditText roomField;
     private static DatabaseReference mDatabase;
     private static Random random = new Random();
     private static VolumeHandler volumeHandler = new VolumeHandler();
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity
     private static PowerManager.WakeLock wakeLock;
     private static int lastRingMode;
     private static AudioManager AudioManager;
-    private static DrawerLayout drawer;
+    private DrawerLayout drawer;
     Toolbar toolbar;
     SharedPreferences prefs;
     GoogleSignInAccount googleAccount;
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     protected void onResume() {
-        signIn();
+        //signIn();
         // Activity's been resumed
         wakeLock.acquire();
         AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_SILENT);
