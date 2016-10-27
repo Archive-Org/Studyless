@@ -8,7 +8,12 @@
 
 package com.company.studyless;
 
-import android.app.*;
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,7 +25,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.*;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -33,14 +42,29 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.*;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
+
 import com.company.studyless.Views.Intro;
 import com.company.studyless.Views.Settings;
-import com.company.studyless.fragments.*;
+import com.company.studyless.fragments.BlancFragment;
+import com.company.studyless.fragments.Info;
+import com.company.studyless.fragments.Leet;
+import com.company.studyless.fragments.News;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.auth.api.Auth;
@@ -51,7 +75,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.firebase.database.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.lang.reflect.Field;
@@ -251,12 +279,14 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     protected void onResume() {
-        super.onResume();
+        signIn();
         // Activity's been resumed
         wakeLock.acquire();
         AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_SILENT);
         AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_VIBRATE);
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+        super.onResume();
+
     }
 
     @Override
@@ -450,7 +480,7 @@ public class MainActivity extends AppCompatActivity
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        signIn();
+
 
     }
 
@@ -530,12 +560,12 @@ public class MainActivity extends AppCompatActivity
                     .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.Share_subject))
                     .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_body));
             startActivity(Intent.createChooser(sharingIntent, getString(R.string.Share_via)));
-        } else if (id == R.id.nav_chat) {
+        } /*else if (id == R.id.nav_chat) {
             fragment = new Chat();
             otherFragment = true;
             questionsLayout.setVisibility(View.GONE);
             hideKB();
-        }
+        }*/
 
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();

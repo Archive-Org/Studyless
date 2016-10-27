@@ -33,7 +33,7 @@
     <string name="Already_in_room">Ya en sala</string>
     <string name="nav_subtitle">Desarollado por Alejandro Pacheco</string>
     <string name="fifth_slide_title">Descargo de responabilidad</string>
-    <string name="fifth_slide_description">No me responsabilizo del uso que se de a esta aplicación, ariesgar no esta mal, pero que sean riesgos calculados.</string>
+    <string name="fifth_slide_description">No me responsabilizo del uso que se de a esta aplicación, arriesgar no esta mal, pero que sean riesgos calculados.</string>
     <string name="forth_slide_title">Se dicreto, opten las respuestas por vibraciones</string>
     <string name="share_body">Hey, hechale un vistazo a esta nueva app</string>
     <string name="Share_via">Compartir mediante</string>
@@ -46,8 +46,8 @@
     <string name="how_vibrations_title">Como funcionan las Vibraciones</string>
     <string name="by_studyless">Por Studyless</string>
     <string name="Share_subject">Studyless</string>
-    <string name="contact_body">Si ocurre cualquier error o quere enviar sugerencias, contacte con el correo: </string>
-    <string name="how_body">Primero debe unurse a una, al inicio se le asigna una sala aleatoria, la cual se puede cambiar deslizando la pagina principal hacia arriba, una vez en la sala todas las preguntas estaran en estado neutro. Segidamente invite a sus amigos a unirse y podeis enpezar a votar en las preguntas.</string>
+    <string name="contact_body">Si ocurre cualquier error o quere enviar sugerencias, contacte con el correo: Studyless@workmail.com </string>
+    <string name="how_body">Primero debe unurse a una, al inicio se le asigna una sala aleatoria, la cual se puede cambiar deslizando la pagina principal hacia arriba, una vez en la sala todas las preguntas estaran en estado neutro. Seguidamente invite a sus amigos a unirse y podeis enpezar a votar en las preguntas.</string>
     <string name="tips_title">Consejos</string>
     <string name="what_title">Ques es Studyless</string>
     <string name="how_vibrations_body">Si quieres ir al siguiente nivel puedes utilizar las vibraciónes del telefono para recivir las respuestas. Es necesario que el dispositivo desbloqueado y la aplicación abierta ( Se recomienda desactivar la pantalla de bloqueo y dejar la aplicación abierta ), utiliza el boton para bajar el volumen para seleccionar la pregunta, si queres saber la cuarta pregunta tiene que pulsar la tecla bajar volumen 4 veces, para saber la 5ª cinco veces y así sucesivamente ... Después de un segundo sin pulsaciones el dispositivo vibrará dando la respuesta más votada de la siguiente manera : \n-1 vibracion corta = A \n-2 vibraciones cortas = B \n-3 vibraciones cortas = C \n-4 vibraciones cortas = D \n Y una vibración larga significa que no hay respuesta clara\n \n</string>
@@ -57,5 +57,7 @@
     <string name="news">Novedades</string>
     <string name="chat">Chat</string>
     <string name="show_notification">Mostrar Notificacion</string>
+    <string name="news_title">Noticias</string>
+    <string name="news_body">Ninguna noticia aun</string>
 
 </resources>
