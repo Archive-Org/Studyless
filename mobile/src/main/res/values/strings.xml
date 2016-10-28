@@ -65,7 +65,7 @@
     <string name="news">News</string>
     <string name="show_notification">Show notification</string>
     <string name="chat">Chat</string>
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7109339045377485/4513033653</string>
     <string name="news_title">Noticias</string>
     <string name="news_body">Nothing here yet</string>
 </resources>

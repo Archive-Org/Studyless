@@ -8,14 +8,12 @@
 
 package com.company.studyless;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -24,7 +22,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,7 +38,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,7 +53,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.company.studyless.Views.Intro;
 import com.company.studyless.Views.Settings;
@@ -67,20 +62,13 @@ import com.company.studyless.fragments.Leet;
 import com.company.studyless.fragments.News;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.lang.reflect.Field;
 import java.util.Random;
@@ -92,36 +80,32 @@ public class MainActivity extends AppCompatActivity
 
     private static final RadioGroup[] G = new RadioGroup[com.company.studyless.Matrix.questionsRows];
     private static final TextView[] result = new TextView[com.company.studyless.Matrix.questionsRows];
-    private static final String TAG = "SignInActivity";
-    private static final int RC_SIGN_IN = 9001;
-    private  FirebaseRemoteConfig mFirebaseRemoteConfig;
-    private  LinearLayout questionsLayout, blackScreen;
     private static Animation fadeIn, fadeOut;
-    private RelativeLayout loadingLayout;
     private static Matrix Matrix = new Matrix();
-    private TextView matrixText, volumeCount;
-    private EditText roomField;
     private static DatabaseReference mDatabase;
     private static Random random = new Random();
     private static VolumeHandler volumeHandler = new VolumeHandler();
     private static boolean showNotification, showMatrix;
-    private static int[] checkedButtons = {
-            9999, 9999, 9999, 9999, 9999,
-            9999, 9999, 9999, 9999, 9999,
-            9999, 9999, 9999, 9999, 9999,
-            9999, 9999, 9999, 9999, 9999};
+    private static int[] checkedButtons = {9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999, 9999};
     private static SensorManager mSensorManager;
     private static Sensor mProximity;
     private static PowerManager.WakeLock wakeLock;
     private static int lastRingMode;
     private static AudioManager AudioManager;
-    private DrawerLayout drawer;
     Toolbar toolbar;
+    AdView mAdView;
     SharedPreferences prefs;
-    GoogleSignInAccount googleAccount;
+    //private static final String TAG = "SignInActivity";
+    //private static final int RC_SIGN_IN = 9001;
+    private LinearLayout questionsLayout, blackScreen;
+    private RelativeLayout loadingLayout;
+    private TextView matrixText, volumeCount;
+    private EditText roomField;
+    private DrawerLayout drawer;
+    //GoogleSignInAccount googleAccount;
     private int room = random.nextInt(100000);
     private boolean otherFragment = false;
-    private GoogleApiClient mGoogleApiClient;
+    //private GoogleApiClient mGoogleApiClient;
 
     private int getResId(String resName) {
         try {
@@ -150,15 +134,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         //Load ad
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+
         //Bind views
         bindObjects();
-
-        //Login
-        setUpLogging();
 
         //Hide until loaded
         questionsLayout.setVisibility(View.GONE);
@@ -191,7 +173,7 @@ public class MainActivity extends AppCompatActivity
 
         //Initialize database and Vibrations
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
         Vibrator vibratorService = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         volumeHandler.setVibrator(vibratorService);
 
@@ -209,16 +191,6 @@ public class MainActivity extends AppCompatActivity
         getDatabase();
     }
 
-    void setUpLogging() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-    }
-
     void checkFirstTime() {
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean previouslyStarted = prefs.getBoolean("Previously started", false);
@@ -228,15 +200,6 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, Intro.class);
             startActivity(intent);
         }
-    }
-
-    void loadSplashScreen() {
-        setContentView(R.layout.splash_screen);
-        VideoView vV = (VideoView) findViewById(R.id.videoView);
-        Uri path = Uri.parse("android.resource://com.company.studyless/"
-                + R.raw.splash);
-        vV.setVideoURI(path);
-        vV.start();
     }
 
     void setUpAudio() {
@@ -279,7 +242,9 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     protected void onResume() {
-        //signIn();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
         // Activity's been resumed
         wakeLock.acquire();
         AudioManager.setRingerMode(android.media.AudioManager.RINGER_MODE_SILENT);
@@ -292,65 +257,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        if (mAdView != null) {
+            mAdView.pause();
+        }
         wakeLock.release();
         // Activity's been paused
         AudioManager.setRingerMode(lastRingMode);
         mSensorManager.unregisterListener(this);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-        }
-    }
-
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            googleAccount = result.getSignInAccount();
-            saveUserToDatabase();
-        }
-    }
-
-    void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }
-    }
-
-    void saveUserToDatabase() {
-        User user = new User(googleAccount.getEmail(), googleAccount.getId());
-        mDatabase.child("Users/" + googleAccount.getDisplayName())
-                .setValue(user);
-    }
 
     //Handle all Matrix buttons
     public void buttonClickListener(View v) {
@@ -645,16 +560,8 @@ public class MainActivity extends AppCompatActivity
                         .setContentText(getString(R.string.by_studyless))
                         .setPriority(Notification.PRIORITY_MAX)
                         .setSmallIcon(R.drawable.ic_tik);
-        // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MainActivity.class);
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
-
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Adds the back stack for the Intent (but not the Intent itself)
-        // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
@@ -669,7 +576,6 @@ public class MainActivity extends AppCompatActivity
     private void hideKB() {
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
-
         try {
             inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
@@ -721,29 +627,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
-    }
-
-    public AlertDialog logingDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-        builder.setTitle("Iniciar Secion con Google")
-                .setMessage("Para acceder a alguanas caracteristicas tiene que iniciar secion, ¿desea continuar?")
-                .setPositiveButton("Si",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                signIn();
-                            }
-                        })
-                .setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-
-        return builder.create();
     }
 
     @Override
